@@ -50,3 +50,24 @@ docker@memoryalpha ~/home-stack
  ✔ Container nc-db      Healthy                                             0.9s
  ✔ Container nextcloud  Started
  ```
+
+## Variables
+
+Global variables
+
+| Variable                               | default  | Description |
+| -------------------------------------- | -------- | ----------- |
+| `docker_compose_generator_output_path` | `"~"`    | |
+| `docker_compose_generator_uid`         | `"1000"` | |
+| `docker_compose_generator_gid`         | `"1000"` | |
+
+Variables for Nextcloud
+
+| Variable                                     | default      | Description |
+| -------------------------------------------- | ------------ | ----------- |
+| `docker_compose_generator_gid`               | `"1000"`     | |
+| docker_compose_generator_nextcloud_active    | `true`       | |
+| docker_compose_generator_nextcloud_base_path | _none_       | must be set |
+| docker_compose_generator_nextcloud_user      | `"www-data"` | |
+| docker_compose_generator_nextcloud_group     | `"www-data"` | |
+| docker_compose_generator_nextcloud_image     | _none_       | must be set |
