@@ -1,90 +1,52 @@
-# ansible-role-docker-compose-generator
+# docker-compose-homestack
 
-A fork from [this repository](https://github.com/ironicbadger/ansible-role-docker-compose-generator). I really liked the
-way that role worked, but I had a hard time getting the environment variables right when I wanted to put a password in
-there. And since [this issue](https://github.com/ironicbadger/ansible-role-docker-compose-generator/issues/2) was
-closed, I had to fork it.
+This role is an opinionated approach to automating the creation of docker-compose files to run the software on my home
+server.
 
-## How to use it
+## Why?
 
-Pass this role a hash and it will generate a `docker-compose.yml` file. The following structure is supported and is
-designed to be passed to the role using `group_vars`. `environment` can be populated using a list of strings or a
-hash/key-value pairs.
+Started as a fork of the
+[docker-compose-generator](https://github.com/ironicbadger/ansible-role-docker-compose-generator), this now works
+differently. I just didn't find it very useful to have almost all the values and settings in the vars file and then have
+a role that uses a template to simply transform it into its final state. It also didn't support using different networks
+to segment the different stacks. So I decided to rewrite my original fork.
 
-Rendered files are output to the `output` directory.
+## Stack setup
 
-```yaml
----
+All connections to all containers are proxied through traefik. This allows everything to be offered using TLS with
+automatically generated Let's Encrypt certificates. To improve security and further isolate the containers, each stack
+sits on its own network. Only the container that is the entrypoint or the frontend of the software is able to talk to
+traefik and vice versa, all others are only able to communicate within their network.
 
-# global vars
-global_env_vars:
-  - "PUID=1313"
-  - "PGID=1313"
-appdata_path: /opt/appdata
-container_config_path: /config
-container_data_path: /data
+![alt text](docs/stack.png)
 
-# container definitions
-containers:
-  - service_name: letsencrypt
-    active: true
-    image: linuxserver/letsencrypt
-    container_name: le
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - "{{ appdata_path }}/letsencrypt/config:{{ container_config_path }}"
-    restart: always
-    depends_on:
-      - unifi
-      - nextcloud
-      - quassel
-    include_global_env_vars: true
-    environment:
-      - EMAIL=email@email.com
-      - URL=some.tld
-      - SUBDOMAINS=nc, irc, unifi
-      - ONLY_SUBDOMAINS=true
-      - DHLEVEL=4096
-      - TZ=Europe/London
-      - VALIDATION=http
-    mem_limit: 256m
-  - service_name: nextcloud
-    active: true
-    image: nextcloud
-    container_name: nextcloud
-    include_global_env_vars: false
-    volumes:
-      - "{{ appdata_path }}/nextcloud/html:/var/www/html"
-      - "{{ appdata_path }}/nextcloud/apps:/var/www/html/custom_apps"
-      - "{{ appdata_path }}/nextcloud/config:/var/www/html/config"
-      - "{{ appdata_path }}/nextcloud/data:/var/www/html/data"
-      - "{{ appdata_path }}/nextcloud/theme:/var/www/html/themes"
-    mem_limit: 256m
-    restart: "{{ unless_stopped }}"
-    ports:
-      - "8081:80"
-  - service_name: unifi
-    active: true
-    image: linuxserver/unifi
-    container_name: unifi
-    mem_limit: 512m
-    volumes:
-      - "{{ appdata_path }}/unifi:{{ container_config_path }}"
-    depends_on:
-      - service: mongodb
-        condition: service_started
-    include_global_env_vars: true
-    restart: "{{ unless_stopped }}"
-  - service_name: quassel
-    active: true
-    image: linuxserver/quassel
-    container_name: quassel
-    include_global_env_vars: true
-    volumes:
-      - "{{ appdata_path }}/quassel:{{ container_config_path }}"
-    mem_limit: 128m
-    ports:
-      - "4242:4242"
-```
+## The stacks
+
+### traefik
+
+_traefik_ lives in the `traefik` network. This network also contains the _error-pages_ container that offers generic
+error pages in case some service is not available.
+
+### Nextcloud
+
+Nextcloud needs a database, a redis and some other containers that make Nextcloud work.
+
+During the first start, the database must be started first so it can be initialized. Only then start the nextcloud
+container. Otherwise the installation somehow breaks.
+
+```sh
+% docker compose -f docker-compose-nextcloud.yml -p nextcloud up -d nc-db
+[+] Running 2/2
+ ✔ Network nextcloud-net  Created                                           0.1s
+ ✔ Container nc-db        Started                                           1.0s
+docker@memoryalpha ~/home-stack
+ % docker compose -f docker-compose-nextcloud.yml -p nextcloud up -d nc-redis
+[+] Running 1/1
+ ✔ Container nc-redis     Started                                           1.1s
+docker@memoryalpha ~/home-stack
+ % docker compose -f docker-compose-nextcloud.yml -p nextcloud up -d nextcloud
+[+] Running 3/3
+ ✔ Container nc-redis   Healthy                                             0.9s
+ ✔ Container nc-db      Healthy                                             0.9s
+ ✔ Container nextcloud  Started
+ ```
