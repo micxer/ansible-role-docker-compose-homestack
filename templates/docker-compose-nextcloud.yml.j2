@@ -62,8 +62,8 @@ services:
       - "{{ docker_compose_generator_nextcloud_base_path }}/config:/var/www/html/config"
       - "{{ docker_compose_generator_nextcloud_base_path }}/remoteip.conf:/etc/apache2/conf-available/remoteip.conf:ro"
       - "{{ docker_compose_generator_nextcloud_base_path }}/redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini"
-  - service_name: notify_push
-    active: true
+  notify_push:
+    container_name: nc-notify-push
     depends_on:
       - nextcloud
     entrypoint: /var/www/html/custom_apps/notify_push/bin/x86_64/notify_push /var/www/html/config/config.php
