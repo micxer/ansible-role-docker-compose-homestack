@@ -3,39 +3,12 @@ galaxy_info:
   role_name: docker_compose_homestack
   namespace: micxer
   author: Michael Weinrich
-  description: Create software stackS with docker-compose
-  issue_tracker_url: https://github.com/micxer/ansible-role-docker-compose-HOMESTACK/issues
+  description: Run your homeserver base on docker-compose stacks
+  issue_tracker_url: https://github.com/micxer/ansible-role-docker-compose-homestack/issues
   license: GPLv3
   min_ansible_version: "2.4"
   platforms:
-    - name: EL
-      versions:
-        - all
-    - name: GenericUNIX
-      versions:
-        - all
-    - name: Fedora
-      versions:
-        - all
-    - name: opensuse
-      versions:
-        - all
-    - name: Amazon
-      versions:
-        - all
-    - name: GenericBSD
-      versions:
-        - all
-    - name: FreeBSD
-      versions:
-        - all
     - name: Ubuntu
-      versions:
-        - all
-    - name: SLES
-      versions:
-        - all
-    - name: GenericLinux
       versions:
         - all
     - name: Debian
