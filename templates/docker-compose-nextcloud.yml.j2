@@ -87,12 +87,13 @@ services:
       - "{{ docker_compose_generator_nextcloud_base_path }}/config:/var/www/html/config"
   cron:
     container_name: nc-cron
-    # special UID handling https://github.com/nextcloud/docker/issues/1740
     depends_on:
       - nextcloud
     entrypoint: /cron.sh
     environment:
+      # special UID handling https://github.com/nextcloud/docker/issues/1740
       UID: "{{ nextcloud_uid }}"
+      GID: "{{ nextcloud_gid }}"
       MYSQL_DATABASE: nextcloud
       MYSQL_USER: nextcloud
       MYSQL_PASSWORD: "{{ nextcloud_mysql_password }}"
