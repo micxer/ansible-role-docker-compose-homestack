@@ -133,7 +133,6 @@ services:
       - --binlog-format=MIXED
       - --sync-binlog=0
       - --skip-innodb-doublewrite
-      - --innodb_file_per_table
       - --innodb-flush-neighbors=0
       - --innodb-use-native-aio=0
       - --innodb-use-atomic-writes=0
@@ -160,7 +159,7 @@ services:
       - nextcloud
     restart: unless-stopped
     volumes:
-      - "{{ appdata_path }}/mariadb:/var/lib/mysql"
+      - "{{ appdata_path }}/nc-db:/var/lib/mysql"
   ###
   nc-redis:
     container_name: nc-redis
