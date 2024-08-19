@@ -78,7 +78,7 @@ services:
       # necessary for the notify_push app to work:
       traefik.http.routers.nextcloud_notify_push.rule: Host(`nextcloud.{{ local_domain }}`) && PathPrefix(`/push`)
     networks:
-      - proxy
+      - traefik
       - nextcloud
     restart: unless-stopped
     user: "{{ nextcloud_uid }}:{{ nextcloud_gid }}"
