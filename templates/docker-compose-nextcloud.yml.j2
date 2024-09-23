@@ -74,6 +74,7 @@ services:
     labels:
       traefik.enable: true
       traefik.http.routers.nextcloud_notify_push.entrypoints: websecure
+      traefik.http.routers.nextcloud_notify_push.tls.options: modern@file
       traefik.http.routers.nextcloud_notify_push.priority: 11
       # necessary for the notify_push app to work:
       traefik.http.routers.nextcloud_notify_push.rule: Host(`nextcloud.{{ local_domain }}`) && PathPrefix(`/push`)
