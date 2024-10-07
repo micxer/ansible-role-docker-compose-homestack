@@ -1,9 +1,11 @@
 #!/bin/sh
-# https://github.com/nextcloud/docker/issues/1740#issuecomment-1308141561
+
 set -eu
 
-# FIXME: cron jobs are hardcoded for `www-data` user,
-# but apache doesn't run under `www-data` in non-root containers,
+# FIXME: cron jobs are hardcoded for `www-data` user
+# https://github.com/nextcloud/docker/issues/1740
+#
+# Apache may not run under `www-data` in non-root containers,
 # which leads to permission errors in cron jobs.
 #
 # We create a user with the UID under which apache is running,

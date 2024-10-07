@@ -60,6 +60,7 @@ services:
       - "{{ docker_compose_generator_nextcloud_base_path }}/custom_apps:/var/www/html/custom_apps"
       - "{{ docker_compose_generator_nextcloud_base_path }}/data:/var/www/html/data"
       - "{{ docker_compose_generator_nextcloud_base_path }}/config:/var/www/html/config"
+      - "{{ docker_compose_generator_nextcloud_base_path }}/cron.sh:/cron.sh:ro"
       - "{{ docker_compose_generator_nextcloud_base_path }}/remoteip.conf:/etc/apache2/conf-available/remoteip.conf:ro"
       - "{{ docker_compose_generator_nextcloud_base_path }}/redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini"
   notify_push:
