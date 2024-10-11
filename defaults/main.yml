@@ -1,12 +1,31 @@
 ---
 # general settings
-docker_compose_generator_output_path: "~"
-docker_compose_generator_uid: "1000"
-docker_compose_generator_gid: "1000"
+homestack_output_path: "~"
+
+# traefik
+homestack_traefik_version: 2.11.3
+homestack_error_pages_version: 2.27
+homestack_error_pages_theme: matrix
+# homestack_traefik_hostingde_api_key:  # must be set
+homestack_traefik_base_domain: example.com
+# homestack_traefik_base_path:  # must be set
 
 # Nextcloud
-docker_compose_generator_nextcloud_active: true
-# docker_compose_generator_nextcloud_base_path: ""  # must be set
-docker_compose_generator_nextcloud_user: "www-data"
-docker_compose_generator_nextcloud_group: "www-data"
-# docker_compose_generator_nextcloud_image: # must be set
+homestack_nextcloud_active: true
+homestack_nextcloud_uid: "1000"
+homestack_nextcloud_gid: "1000"
+homestack_nextcloud_user: "www-data"
+homestack_nextcloud_group: "www-data"
+# homestack_nextcloud_base_path: ""  # must be set
+# homestack_nextcloud_db_path: ""  # must be set
+homestack_nextcloud_mysql_password: "password"
+homestack_nextcloud_mysql_root_password: "password"
+homestack_nextcloud_admin_user: admin
+homestack_nextcloud_admin_password: 5UP3r53Cr37P455W0rD
+# local_domain: # must be set
+homestack_nextcloud_image: nextcloud:29.0.7-apache
+# homestack_nextcloud_smtp_host: ""  # must be set
+# homestack_nextcloud_smtp_name: ""  # must be set
+# homestack_nextcloud_smtp_password: ""  # must be set
+homestack_nextcloud_base_domain: example.com
+# homestack_nextcloud_mysql_path: ""  # must be set

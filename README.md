@@ -53,21 +53,38 @@ docker@memoryalpha ~/home-stack
 
 ## Variables
 
-Global variables
+### Global variables
 
-| Variable                               | default  | Description |
-| -------------------------------------- | -------- | ----------- |
-| `docker_compose_generator_output_path` | `"~"`    | |
-| `docker_compose_generator_uid`         | `"1000"` | |
-| `docker_compose_generator_gid`         | `"1000"` | |
+| Variable                | default | Description |
+| ----------------------- | ------- | ----------- |
+| `homestack_output_path` | `"~"`   | Where to put the rendered docker-compose files |
 
-Variables for Nextcloud
+### Traefik
 
-| Variable                                     | default      | Description |
-| -------------------------------------------- | ------------ | ----------- |
-| `docker_compose_generator_gid`               | `"1000"`     | |
-| docker_compose_generator_nextcloud_active    | `true`       | |
-| docker_compose_generator_nextcloud_base_path | _none_       | must be set |
-| docker_compose_generator_nextcloud_user      | `"www-data"` | |
-| docker_compose_generator_nextcloud_group     | `"www-data"` | |
-| docker_compose_generator_nextcloud_image     | _none_       | must be set |
+| Variable                              | default     | Description |
+| ------------------------------------- | ----------- | ----------- |
+| `homestack_traefik_version`           | 2.11.3      | version of the traefik docker image |
+| `homestack_traefik_hostingde_api_key` | _not set_   | API key to use the hosting.de API for the Let's encrypt DNS challenge |
+| `homestack_traefik_base_domain`       | example.com | base domain name, will be prefixed with `traefik.` for the FQDN |
+| `homestack_traefik_base_path`         | _not set_   | where are the traefik files stored on disk |
+| `homestack_error_pages_version`       | 2.27        | version of the errorpages docker image |
+| `homestack_error_pages_theme`         | matrix      | the theme used by errorpages |
+
+### Variables for Nextcloud
+
+| Variable                                  | default                   | Description |
+| ----------------------------------------- | ------------------------- | ----------- |
+| `homestack_nextcloud_active`              | `true`                    | Switch rendering of nextcloud docker-compose file on or off |
+| `homestack_nextcloud_uid`                 | `"1000"`                  | The UID used for the nextcloud container |
+| `homestack_nextcloud_gid`                 | `"1000"`                  | The GID used for the nextcloud container |
+| `homestack_nextcloud_image_version`       | `nextcloud:29.0.7-apache` | version of the nextcloud docker image |
+| `homestack_nextcloud_base_path`           | _not set_                 | where are the nextcloud files stored on disk |
+| `homestack_nextcloud_admin_user`          | `admin`                   | username of the nextcloud admin user |
+| `homestack_nextcloud_admin_password`      | `5UP3r53Cr37P455W0rD`     | password of the nextcloud admin user |
+| `homestack_nextcloud_base_domain`         | `example.com`             | base domain name, will be prefixed with `nextcloud.` for the FQDN |
+| `homestack_nextcloud_smtp_host`           | _not set_                 | the host used to send nextlcoud notification emails |
+| `homestack_nextcloud_smtp_name`           | _not set_                 | username to authenticate at the SMTP host |
+| `homestack_nextcloud_smtp_password`       | _not set_                 | password to authenticate at the SMTP host |
+| `homestack_nextcloud_mysql_path`          | _not set_                 | where are the nextcloud db files stored on disk |
+| `homestack_nextcloud_mysql_password`      | `password`                | password for the nextcloud mysql DB |
+| `homestack_nextcloud_mysql_root_password` | `5UP3r53Cr37P455W0rD`     | password of the mysql root user |
