@@ -3,10 +3,10 @@
 services:
   traefik:
     container_name: traefik
-    image: traefik:2.11.3
+    image: traefik:{{ homestack_traefik_version }}
     environment:
-      HOSTINGDE_API_KEY: "{{ hostingde_api_key }}"
-      HOSTINGDE_ZONE_NAME: "{{ base_domain }}"
+      HOSTINGDE_API_KEY: "{{ homestack_traefik_hostingde_api_key }}"
+      HOSTINGDE_ZONE_NAME: "{{ homestack_traefik_base_domain }}"
       TZ: Europe/Berlin
     healthcheck:
       test: ["CMD", "traefik", "healthcheck"]
@@ -42,14 +42,14 @@ services:
       # traefik.http.middlewares.admin.basicauth.users: admin:HASHED_PASSWORD
 
       # api secure
-      traefik.http.routers.traefik.rule: Host(`traefik.{{ local_domain }}`)
+      traefik.http.routers.traefik.rule: Host(`traefik.{{ homestack_traefik_base_domain }}`)
       traefik.http.routers.traefik.entrypoints: websecure
       traefik.http.routers.traefik.service: api@internal
       traefik.http.routers.traefik.middlewares: "default@file"
       traefik.http.routers.traefik.tls.options: modern@file
 
       # ping secure
-      traefik.http.routers.ping.rule: Host(`traefik.{{ local_domain }}`) && PathPrefix(`/ping`)
+      traefik.http.routers.ping.rule: Host(`traefik.{{ homestack_traefik_base_domain }}`) && PathPrefix(`/ping`)
       traefik.http.routers.ping.entrypoints: websecure
       traefik.http.routers.ping.middlewares: "default@file"
       traefik.http.routers.ping.service: ping@internal
@@ -63,13 +63,13 @@ services:
     restart: unless-stopped
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "{{ appdata_path }}/traefik:/etc/traefik"
+      - "{{ homestack_traefik_base_path }}:/etc/traefik"
 
   error-pages:
     container_name: error-pages
     environment:
-      TEMPLATE_NAME: "matrix"
-    image: ghcr.io/tarampampam/error-pages:2.27
+      TEMPLATE_NAME: "{{ homestack_error_pages_theme }}"
+    image: ghcr.io/tarampampam/error-pages:{{ homestack_error_pages_version }}
     labels:
       traefik.enable: "True"
       traefik.http.routers.error-pages-router.rule: "HostRegexp(`{host:.+}`)"

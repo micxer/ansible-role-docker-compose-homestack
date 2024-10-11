@@ -1,21 +1,21 @@
 ---
 - name: Ensure destination for compose file exists
   ansible.builtin.file:
-    path: "{{ docker_compose_generator_output_path }}"
+    path: "{{ homestack_output_path }}"
     state: directory
-    owner: "{{ docker_compose_generator_uid }}"
-    group: "{{ docker_compose_generator_gid }}"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
     mode: "0755"
 
 - name: Write traeffik docker-compose file
   ansible.builtin.template:
     src: "docker-compose-traefik.yml.j2"
-    dest: "{{ docker_compose_generator_output_path }}/docker-compose-traefik.yml"
-    owner: "{{ docker_compose_generator_uid }}"
-    group: "{{ docker_compose_generator_gid }}"
+    dest: "{{ homestack_output_path }}/docker-compose-traefik.yml"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
     mode: "0600"
     backup: true
 
 - name: Include nextcloud tasks
   ansible.builtin.include_tasks: nextcloud.yml
-  when: docker_compose_generator_nextcloud_active
+  when: homestack_nextcloud_active

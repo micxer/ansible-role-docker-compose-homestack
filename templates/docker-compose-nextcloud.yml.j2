@@ -13,24 +13,24 @@ services:
     environment:
       MYSQL_DATABASE: nextcloud
       MYSQL_USER: nextcloud
-      MYSQL_PASSWORD: "{{ nextcloud_mysql_password }}"
+      MYSQL_PASSWORD: "{{ homestack_nextcloud_mysql_password }}"
       MYSQL_HOST: nc-db
-      NEXTCLOUD_ADMIN_USER: "{{ nextcloud_admin_user }}"
-      NEXTCLOUD_ADMIN_PASSWORD: "{{ nextcloud_admin_password }}"
-      NEXTCLOUD_TRUSTED_DOMAINS: "nextcloud.{{ local_domain }}"
-      SMTP_HOST: "{{ nextcloud_smtp_host }}"
+      NEXTCLOUD_ADMIN_USER: "{{ homestack_nextcloud_admin_user }}"
+      NEXTCLOUD_ADMIN_PASSWORD: "{{ homestack_nextcloud_admin_password }}"
+      NEXTCLOUD_TRUSTED_DOMAINS: "nextcloud.{{ homestack_nextcloud_base_domain }}"
+      SMTP_HOST: "{{ homestack_nextcloud_smtp_host }}"
       SMTP_SECURE: tls # tls | ssl | <empty>  
       SMTP_PORT: 587
       SMTP_AUTHTYPE: PLAIN # LOGIN | PLAIN | CRAM-MD5 | <empty>
-      SMTP_NAME: "{{ nextcloud_smtp_name }}"
-      SMTP_PASSWORD: "{{ nextcloud_smtp_password }}"
+      SMTP_NAME: "{{ homestack_nextcloud_smtp_name }}"
+      SMTP_PASSWORD: "{{ homestack_nextcloud_smtp_password }}"
       MAIL_FROM_ADDRESS: notify # local-part for the 'from' field in the emails sent by Nextcloud
-      MAIL_DOMAIN: "nextcloud.{{ local_domain }}"
+      MAIL_DOMAIN: "nextcloud.{{ homestack_nextcloud_base_domain }}"
       PHP_MEMORY_LIMIT: 1024M # 512M is the minimum recommended by Nextcloud
       PHP_UPLOAD_LIMIT: 1024M # 512M is the minimum recommended by Nextcloud
       # APACHE_DISABLE_REWRITE_IP: 1  # using empty remoteip.conf
       TRUSTED_PROXIES: 172.20.1.2
-      OVERWRITECLIURL: "https://nextcloud.{{ local_domain }}"
+      OVERWRITECLIURL: "https://nextcloud.{{ homestack_nextcloud_base_domain }}"
       REDIS_HOST: nc-redis
     healthcheck:
       test: curl -sSf 'http://localhost/status.php' | grep '"installed":true' | grep '"maintenance":false' | grep '"needsDbUpgrade":false' || exit 1
@@ -38,14 +38,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    image: "{{ docker_compose_generator_nextcloud_image }}"
+    image: nextcloud:{{ homestack_nextcloud_image_version }}
     labels:
       traefik.enable: true
       traefik.http.middlewares.nextcloud_redirect.redirectregex.permanent: true
       traefik.http.middlewares.nextcloud_redirect.redirectregex.regex: 'https://(.*)/.well-known/(?:card|cal)dav'
       traefik.http.middlewares.nextcloud_redirect.redirectregex.replacement: 'https://$${1}/remote.php/dav'
       traefik.http.middlewares.nextcloud_sameorigin.headers.customFrameOptionsValue: "sameorigin"
-      traefik.http.routers.nextcloud.rule: Host(`nextcloud.{{ local_domain }}`)
+      traefik.http.routers.nextcloud.rule: Host(`nextcloud.{{ homestack_nextcloud_base_domain }}`)
       traefik.http.routers.nextcloud.entrypoints: websecure
       traefik.http.routers.nextcloud.middlewares: "nextcloud_redirect@docker,nextcloud_sameorigin@docker,default@file"
       traefik.http.routers.nextcloud.tls.options: modern@file
@@ -55,14 +55,14 @@ services:
       - traefik
       - nextcloud
     restart: unless-stopped
-    user: "{{ nextcloud_uid }}:{{ nextcloud_gid }}"
+    user: "{{ homestack_nextcloud_uid }}:{{ homestack_nextcloud_gid }}"
     volumes:
-      - "{{ docker_compose_generator_nextcloud_base_path }}/custom_apps:/var/www/html/custom_apps"
-      - "{{ docker_compose_generator_nextcloud_base_path }}/data:/var/www/html/data"
-      - "{{ docker_compose_generator_nextcloud_base_path }}/config:/var/www/html/config"
-      - "{{ docker_compose_generator_nextcloud_base_path }}/cron.sh:/cron.sh:ro"
-      - "{{ docker_compose_generator_nextcloud_base_path }}/remoteip.conf:/etc/apache2/conf-available/remoteip.conf:ro"
-      - "{{ docker_compose_generator_nextcloud_base_path }}/redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini"
+      - "{{ homestack_nextcloud_base_path }}/custom_apps:/var/www/html/custom_apps"
+      - "{{ homestack_nextcloud_base_path }}/data:/var/www/html/data"
+      - "{{ homestack_nextcloud_base_path }}/config:/var/www/html/config"
+      - "{{ homestack_nextcloud_base_path }}/cron.sh:/cron.sh:ro"
+      - "{{ homestack_nextcloud_base_path }}/remoteip.conf:/etc/apache2/conf-available/remoteip.conf:ro"
+      - "{{ homestack_nextcloud_base_path }}/redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini"
   notify_push:
     container_name: nc-notify-push
     depends_on:
@@ -71,22 +71,22 @@ services:
     environment:
       PORT: 7867
       NEXTCLOUD_URL: http://nextcloud  # don't go through the proxy to contact the nextcloud server
-    image: "{{ docker_compose_generator_nextcloud_image }}"
+    image: nextcloud:{{ homestack_nextcloud_image_version }}
     labels:
       traefik.enable: true
       traefik.http.routers.nextcloud_notify_push.entrypoints: websecure
       traefik.http.routers.nextcloud_notify_push.tls.options: modern@file
       traefik.http.routers.nextcloud_notify_push.priority: 11
       # necessary for the notify_push app to work:
-      traefik.http.routers.nextcloud_notify_push.rule: Host(`nextcloud.{{ local_domain }}`) && PathPrefix(`/push`)
+      traefik.http.routers.nextcloud_notify_push.rule: Host(`nextcloud.{{ homestack_nextcloud_base_domain }}`) && PathPrefix(`/push`)
     networks:
       - traefik
       - nextcloud
     restart: unless-stopped
-    user: "{{ nextcloud_uid }}:{{ nextcloud_gid }}"
+    user: "{{ homestack_nextcloud_uid }}:{{ homestack_nextcloud_gid }}"
     volumes:
-      - "{{ docker_compose_generator_nextcloud_base_path }}/custom_apps:/var/www/html/custom_apps"
-      - "{{ docker_compose_generator_nextcloud_base_path }}/config:/var/www/html/config"
+      - "{{ homestack_nextcloud_base_path }}/custom_apps:/var/www/html/custom_apps"
+      - "{{ homestack_nextcloud_base_path }}/config:/var/www/html/config"
   cron:
     container_name: nc-cron
     depends_on:
@@ -94,26 +94,26 @@ services:
     entrypoint: /cron.sh
     environment:
       # special UID handling https://github.com/nextcloud/docker/issues/1740
-      UID: "{{ nextcloud_uid }}"
-      GID: "{{ nextcloud_gid }}"
+      UID: "{{ homestack_nextcloud_uid }}"
+      GID: "{{ homestack_nextcloud_gid }}"
       MYSQL_DATABASE: nextcloud
       MYSQL_USER: nextcloud
-      MYSQL_PASSWORD: "{{ nextcloud_mysql_password }}"
+      MYSQL_PASSWORD: "{{ homestack_nextcloud_mysql_password }}"
       MYSQL_HOST: nc-db
-      NEXTCLOUD_TRUSTED_DOMAINS: "nextcloud.{{ local_domain }}"
-      SMTP_HOST: "{{ nextcloud_smtp_host }}"
+      NEXTCLOUD_TRUSTED_DOMAINS: "nextcloud.{{ homestack_nextcloud_base_domain }}"
+      SMTP_HOST: "{{ homestack_nextcloud_smtp_host }}"
       SMTP_SECURE: tls # tls | ssl | <empty>
       SMTP_PORT: 587
       SMTP_AUTHTYPE: PLAIN # LOGIN | PLAIN | CRAM-MD5 | <empty>
-      SMTP_NAME: "{{ nextcloud_smtp_name }}"
-      SMTP_PASSWORD: "{{ nextcloud_smtp_password }}"
+      SMTP_NAME: "{{ homestack_nextcloud_smtp_name }}"
+      SMTP_PASSWORD: "{{ homestack_nextcloud_smtp_password }}"
       MAIL_FROM_ADDRESS: notify # local-part for the 'from' field in the emails sent by Nextcloud
-      MAIL_DOMAIN: "nextcloud.{{ local_domain }}"
+      MAIL_DOMAIN: "nextcloud.{{ homestack_nextcloud_base_domain }}"
       PHP_MEMORY_LIMIT: 1024M # 512M is the minimum recommended by Nextcloud
       PHP_UPLOAD_LIMIT: 1024M # 512M is the minimum recommended by Nextcloud
       # APACHE_DISABLE_REWRITE_IP: 1  # using empty remoteip.conf
       TRUSTED_PROXIES: 172.20.1.2
-      OVERWRITECLIURL: "https://nextcloud.{{ local_domain }}"
+      OVERWRITECLIURL: "https://nextcloud.{{ homestack_nextcloud_base_domain }}"
       REDIS_HOST: nc-redis
     healthcheck:
       test: pgrep busybox
@@ -121,7 +121,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    image: "{{ docker_compose_generator_nextcloud_image }}"
+    image: nextcloud:{{ homestack_nextcloud_image_version }}
     networks:
       - nextcloud
     restart: unless-stopped
@@ -147,10 +147,10 @@ services:
       # https://kitcharoenp.github.io/mysql/zfs/mariadb/2021/10/18/zfs-tunning-optimization.html#mysql-tuning-and-optimization-for-zfs
     container_name: nc-db
     environment:
-      MARIADB_ROOT_PASSWORD: "{{ container_mysql_root_password }}"
+      MARIADB_ROOT_PASSWORD: "{{ homestack_nextcloud_mysql_root_password }}"
       MARIADB_DATABASE: nextcloud
       MARIADB_USER: nextcloud
-      MARIADB_PASSWORD: "{{ nextcloud_mysql_password }}"
+      MARIADB_PASSWORD: "{{ homestack_nextcloud_mysql_password }}"
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--defaults-extra-file=/var/lib/mysql/data/.my-healthcheck.cnf", "--connect", "--innodb_initialized"]
       start_period: 15s
@@ -162,7 +162,7 @@ services:
       - nextcloud
     restart: unless-stopped
     volumes:
-      - "{{ appdata_path }}/nc-db:/var/lib/mysql"
+      - "{{ homestack_nextcloud_mysql_path }}/nc-db:/var/lib/mysql"
   ###
   nc-redis:
     container_name: nc-redis
