@@ -1,7 +1,7 @@
 {
   "autodiscover": "false",
   "branchPrefix": "renovate/",
-  "dryRun": false,
+  "dryRun": null,
   "username": "renovate-release",
   "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
   "onboarding": false,
@@ -15,7 +15,7 @@
   "major": {
     "dependencyDashboardApproval": true
   },
-  "dockerfile": {
+  "docker-compose": {
     "fileMatch": [
       "templates/docker-compose-.+.yml.j2$"
     ] 
