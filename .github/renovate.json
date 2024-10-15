@@ -1,12 +1,9 @@
 {
-  "extends": ["config:base"],
-  "docker": {
-    "fileMatch": ["templates/docker-compose-*.yml.j2"]
-  },
-  "packageRules": [
-    {
-      "matchPackagePatterns": ["nextcloud"],
-      "automerge": false
-    }
-  ]
+  "extends": ["config:recommended", ":dependencyDashboard"],
+  "fileMatch": [
+    "templates/docker-compose-.+.yml.j2$"
+  ],
+  "major": {
+    "dependencyDashboardApproval": true
+  }
 }

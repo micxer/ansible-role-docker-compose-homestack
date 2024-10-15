@@ -3,7 +3,7 @@ galaxy_info:
   role_name: docker_compose_homestack
   namespace: micxer
   author: Michael Weinrich
-  description: Run your homeserver base on docker-compose stacks
+  description: Run your homeserver based on docker-compose stacks
   issue_tracker_url: https://github.com/micxer/ansible-role-docker-compose-homestack/issues
   license: GPLv3
   min_ansible_version: "2.4"
