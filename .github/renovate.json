@@ -15,7 +15,9 @@
   "major": {
     "dependencyDashboardApproval": true
   },
-  "fileMatch": [
-    "templates/docker-compose-.+.yml.j2$"
-  ]
+  "dockerfile": {
+    "fileMatch": [
+      "templates/docker-compose-.+.yml.j2$"
+    ] 
+  }
 }
