@@ -1,23 +1,12 @@
 {
-  "autodiscover": "false",
-  "branchPrefix": "renovate/",
-  "dryRun": null,
-  "username": "renovate-release",
-  "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
-  "onboarding": false,
-  "platform": "github",
-  "repositories": ["micxer/ansible-role-docker-compose-homestack"],
-  "extends": ["config:recommended", ":dependencyDashboard"],
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices"],
   "labels": [
     "dependencies"
   ],
-  "assigneesFromCodeOwners": false,
-  "major": {
-    "dependencyDashboardApproval": true
-  },
   "docker-compose": {
     "fileMatch": [
-      "templates/docker-compose-.+.yml.j2$"
+      "templates/docker-compose-.+\\.yml\\.j2$"
     ] 
   }
 }
