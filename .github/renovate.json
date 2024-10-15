@@ -1,0 +1,12 @@
+{
+  "extends": ["config:base"],
+  "docker": {
+    "fileMatch": ["templates/docker-compose-*.yml.j2"]
+  },
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["nextcloud"],
+      "automerge": false
+    }
+  ]
+}

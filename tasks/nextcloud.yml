@@ -1,5 +1,5 @@
 ---
-- name: Ensure nextcloud directories exist
+- name: nextcloud | Ensure nextcloud directories exist
   ansible.builtin.file:
     path: "{{ homestack_nextcloud_base_path }}/{{ item.name }}"
     state: directory
@@ -14,7 +14,7 @@
     - name: config
       mode: '0750'
 
-- name: Copy nextcloud specific files to their respective directories
+- name: nextcloud | Copy nextcloud specific files to their respective directories
   ansible.builtin.copy:
     src: "{{ item }}"
     dest: "{{ homestack_nextcloud_base_path }}/{{ item | basename }}"
@@ -26,7 +26,7 @@
     - nextcloud/*.ini
     - nextcloud/*.conf
 
-- name: Copy cron.sh for nextcloud
+- name: nextcloud | Copy cron.sh for nextcloud
   ansible.builtin.copy:
     src: "{{ item }}"
     dest: "{{ homestack_nextcloud_base_path }}/{{ item | basename }}"
@@ -37,7 +37,7 @@
   with_fileglob:
     - nextcloud/*.sh
 
-- name: Write docker-compose file
+- name: nextcloud | Write docker-compose file
   ansible.builtin.template:
     src: "docker-compose-nextcloud.yml.j2"
     dest: "{{ homestack_output_path }}/docker-compose-nextcloud.yml"
