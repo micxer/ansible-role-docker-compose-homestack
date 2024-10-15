@@ -25,3 +25,11 @@ jobs:
         with:
           configurationFile: .github/renovate.json
           token: ${{ secrets.GITHUB_TOKEN }}
+          env-regexp: "^(?:RENOVATE_\\w+|LOG_LEVEL)$"
+        env:
+          LOG_LEVEL: debug
+          RENOVATE_REPOSITORIES: 'micxer/ansible-role-docker-compose-homestack'
+          RENOVATE_AUTODISCOVER: false
+          RENOVATE_AUTOMERGE: false
+          RENOVATE_PLATFORM: github
+          RENOVATE_DETECT_HOST_RULES_FROM_ENV: true
