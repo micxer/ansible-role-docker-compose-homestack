@@ -1,0 +1,74 @@
+{{ ansible_managed | comment }}
+---
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:{{ homestack_monitoring_prometheus_image_version }}
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=30d
+    healthcheck:
+      test: ["CMD", "wget", "-O", "/dev/null", "http://localhost:9090"]
+      interval: 10s
+      timeout: 15s
+      retries: 10
+      start_period: 40s 
+    labels:
+      traefik.enable: true
+      traefik.http.routers.prometheus.rule: Host(`prometheus.{{ homestack_monitoring_base_domain }}`)
+      traefik.http.routers.prometheus.entrypoints: websecure
+      traefik.http.routers.prometheus.tls.options: modern@file
+      traefik.docker.network: traefik-net
+    networks:
+      - traefik
+      - monitoring
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    user: "{{ homestack_uid }}:{{ homestack_gid }}"
+    volumes:
+      - "{{ homestack_monitoring_prometheus_base_path }}/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+      - "{{ homestack_monitoring_prometheus_base_path }}/data:/prometheus"
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-oss:{{ homestack_monitoring_grafana_image_version }}
+    environment:
+      GF_DEFAULT_INSTANCE_NAME: Homestack
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: {{ homestack_monitoring_grafana_admin_password }}
+      GF_LOG_LEVEL: info
+      GF_LOG_MODE: console
+    healthcheck:
+      test: ["CMD", "wget", "-O", "/dev/null", "http://localhost:3000"]
+      interval: 10s
+      timeout: 15s
+      retries: 10
+      start_period: 30s 
+    labels:
+      traefik.enable: true
+      traefik.http.routers.grafana.rule: Host(`grafana.{{ homestack_monitoring_base_domain }}`)
+      traefik.http.routers.grafana.entrypoints: websecure
+      traefik.http.routers.grafana.tls.options: modern@file
+      traefik.docker.network: traefik-net
+    networks:
+      - traefik
+      - monitoring
+    ports:
+     - 3000:3000
+    restart: unless-stopped
+    user: "{{ homestack_uid }}:{{ homestack_gid }}"
+    volumes:
+      - "{{ homestack_monitoring_grafana_base_path }}/provisioning:/etc/grafana/provisioning"
+      - "{{ homestack_monitoring_grafana_base_path }}/data:/var/lib/grafana"
+
+networks:
+  traefik:
+    name: traefik-net
+    external: true
+  monitoring:
+    name: monitoring-net
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.20.3.0/24
