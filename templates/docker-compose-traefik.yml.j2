@@ -6,7 +6,7 @@ services:
     image: traefik:{{ homestack_traefik_version }}
     environment:
       HOSTINGDE_API_KEY: "{{ homestack_traefik_hostingde_api_key }}"
-      HOSTINGDE_ZONE_NAME: "{{ homestack_traefik_base_domain }}"
+      HOSTINGDE_ZONE_NAME: "{{ homestack_traefik_hostingde_domain }}"
       TZ: Europe/Berlin
     healthcheck:
       test: ["CMD", "traefik", "healthcheck"]
@@ -71,7 +71,7 @@ services:
       TEMPLATE_NAME: "{{ homestack_error_pages_theme }}"
     image: ghcr.io/tarampampam/error-pages:{{ homestack_error_pages_version }}
     labels:
-      traefik.enable: "True"
+      traefik.enable: true
       traefik.http.routers.error-pages-router.rule: "HostRegexp(`{host:.+}`)"
       traefik.http.routers.error-pages-router.priority: "1"
       traefik.http.routers.error-pages-router.entrypoints: "websecure"

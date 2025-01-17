@@ -1,0 +1,26 @@
+apiVersion: 1
+
+prune: true
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    # orgId: 1
+    # Access mode - proxy (server in the UI) or direct (browser in the UI).
+    url: http://prometheus:9090
+    jsonData:
+      httpMethod: POST
+      manageAlerts: true
+      prometheusType: Prometheus
+      prometheusVersion: "{{ homestack_monitoring_prometheus_image_version }}"
+      cacheLevel: 'High'
+      disableRecordingRules: false
+      incrementalQueryOverlapWindow: 10m
+    # <int> Sets the version. Used to compare versions when
+    # updating. Ignored when creating a new data source.
+    version: 2
+    isDefault: true
+    # <bool> Allows users to edit data sources from the
+    # Grafana UI.
+    editable: false

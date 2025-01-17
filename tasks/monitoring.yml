@@ -1,0 +1,58 @@
+---
+- name: monitoring | Ensure prometheus directories exist
+  ansible.builtin.file:
+    path: "{{ homestack_monitoring_prometheus_base_path }}/{{ item.name }}"
+    state: directory
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - name: data
+      mode: '0750'
+
+- name: monitoring | Copy prometheus specific files to their respective directories
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ homestack_monitoring_prometheus_base_path }}/{{ item | basename }}"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true
+  with_fileglob:
+    - monitoring/prometheus.yml
+
+- name: monitoring | Ensure grafana directories exist
+  ansible.builtin.file:
+    path: "{{ homestack_monitoring_grafana_base_path }}/{{ item.name }}"
+    state: directory
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0750"
+  with_items:
+    - name: data
+    - name: provisioning
+    - name: provisioning/dashboards
+    - name: provisioning/datasources
+
+- name: monitoring | Copy grafana provisioning files
+  ansible.builtin.template:
+    src: "grafana/{{ item }}"
+    dest: "{{ homestack_monitoring_grafana_base_path }}/{{ item | dirname }}/{{ item | basename | regex_replace('\\.j2$', '') }}"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true
+  with_items:
+    - provisioning/dashboards/dashboards.yml.j2
+    - provisioning/datasources/prometheus.yml.j2
+
+# dashboard files must be provisioned separately as json files
+
+- name: monitoring | Write docker-compose file
+  ansible.builtin.template:
+    src: "docker-compose-monitoring.yml.j2"
+    dest: "{{ homestack_output_path }}/docker-compose-monitoring.yml"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true
