@@ -7,6 +7,7 @@ homestack_traefik_version: 2.11.3
 homestack_error_pages_version: 2.27
 homestack_error_pages_theme: matrix
 # homestack_traefik_hostingde_api_key:  # must be set
+homestack_traefik_hostingde_domain: example.com
 homestack_traefik_base_domain: example.com
 # homestack_traefik_base_path:  # must be set
 
@@ -23,7 +24,7 @@ homestack_nextcloud_mysql_root_password: "password"
 homestack_nextcloud_admin_user: admin
 homestack_nextcloud_admin_password: 5UP3r53Cr37P455W0rD
 # local_domain: # must be set
-homestack_nextcloud_image: nextcloud:29.0.7-apache
+homestack_nextcloud_image_version: 29.0.7-apache
 # homestack_nextcloud_smtp_host: ""  # must be set
 # homestack_nextcloud_smtp_name: ""  # must be set
 # homestack_nextcloud_smtp_password: ""  # must be set

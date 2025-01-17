@@ -123,6 +123,7 @@ services:
       retries: 10
     image: nextcloud:{{ homestack_nextcloud_image_version }}
     networks:
+      - traefik
       - nextcloud
     restart: unless-stopped
     volumes_from:

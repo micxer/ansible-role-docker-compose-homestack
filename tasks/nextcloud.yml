@@ -41,7 +41,7 @@
   ansible.builtin.template:
     src: "docker-compose-nextcloud.yml.j2"
     dest: "{{ homestack_output_path }}/docker-compose-nextcloud.yml"
-    owner: "{{ homestack_nextcloud_uid }}"
-    group: "{{ homestack_nextcloud_gid }}"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
     mode: "0600"
     backup: true
