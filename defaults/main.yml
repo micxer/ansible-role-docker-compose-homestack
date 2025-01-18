@@ -19,11 +19,10 @@ homestack_nextcloud_user: "www-data"
 homestack_nextcloud_group: "www-data"
 # homestack_nextcloud_base_path: ""  # must be set
 # homestack_nextcloud_db_path: ""  # must be set
-homestack_nextcloud_mysql_password: "password"
-homestack_nextcloud_mysql_root_password: "password"
+# homestack_nextcloud_mysql_password: ""  # must be set
+# homestack_nextcloud_mysql_root_password: ""  # must be set
 homestack_nextcloud_admin_user: admin
-homestack_nextcloud_admin_password: 5UP3r53Cr37P455W0rD
-# local_domain: # must be set
+# homestack_nextcloud_admin_password: ""  # must be set
 homestack_nextcloud_image_version: 29.0.7-apache
 # homestack_nextcloud_smtp_host: ""  # must be set
 # homestack_nextcloud_smtp_name: ""  # must be set
