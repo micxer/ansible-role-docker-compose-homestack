@@ -23,3 +23,7 @@
 - name: Include monitoring stack tasks
   ansible.builtin.include_tasks: monitoring.yml
   when: homestack_monitoring_active
+
+- name: Include home automation stack tasks
+  ansible.builtin.include_tasks: ha.yml
+  when: homestack_ha_active

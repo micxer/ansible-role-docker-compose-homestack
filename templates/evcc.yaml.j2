@@ -1,0 +1,78 @@
+network:
+  schema: https
+  host: "evcc.{{ homestack_ha_base_domain }}"
+  port: 7070
+
+log: debug
+levels:
+  cache: error
+
+# unique installation id
+plant: "{{ homestack_ha_evcc_installation_id }}"
+
+interval: 30s # control cycle interval
+
+meters:
+- type: template
+  template: kostal-plenticore 
+  id: 71  
+  host: sol  
+  port: 1502  
+  usage: pv  
+  modbus: tcpip  
+  name: plenticore
+- type: template
+  template: kostal-plenticore 
+  id: 71  
+  host: sol  
+  port: 1502  
+  usage: battery  
+  modbus: tcpip  
+  name: byd
+
+- type: template
+  template: kostal-ksem
+  id: 71
+  host: korvan
+  port: 502
+  usage: grid
+  modbus: tcpip
+  name: ksem
+
+chargers:
+- type: template
+  template: tinkerforge-warp3 
+  host: tls://mosquitto.{{ homestack_ha_base_domain }}
+  port: 8883  
+  topic: warp  
+  timeout: 30s  
+  name: warp3
+  user: "{{ homestack_ha_evcc_mqtt_user }}"
+  password: "{{ homestack_ha_evcc_mqtt_password }}"
+
+vehicles:
+- type: template
+  template: vw 
+  user: "{{ homestack_ha_evcc_vw_user }}"
+  password: "{{ homestack_ha_evcc_vw_password }}"
+  vin: "{{ homestack_ha_evcc_vw_vin }}"
+  title: ID.3  
+  capacity: 58  
+  timeout: 10s  
+  name: id3
+  cache: 5m
+
+loadpoints:
+- title: Fahrradhäuschen
+  charger: warp3
+  vehicle: id3
+  mode: minpv
+
+site:
+  title: Zuhause
+  meters:
+    grid: ksem
+    pv:
+    - plenticore
+    battery:
+    - byd

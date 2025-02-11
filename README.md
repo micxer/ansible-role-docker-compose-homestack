@@ -55,9 +55,11 @@ docker@memoryalpha ~/home-stack
 
 ### Global variables
 
-| Variable                | default | Description |
-| ----------------------- | ------- | ----------- |
-| `homestack_output_path` | `"~"`   | Where to put the rendered docker-compose files |
+| Variable                | default   | Description |
+| ----------------------- | --------- | ----------- |
+| `homestack_output_path` | `"~"`     | Where to put the rendered docker-compose files |
+| `homestack_uid`         | _not set_ | The user ID used for running docker images to not run as root |
+| `homestack_gid`         | _not set_ | The group ID used for running docker images to not run as root |
 
 ### Traefik
 
@@ -70,7 +72,7 @@ docker@memoryalpha ~/home-stack
 | `homestack_error_pages_version`       | 2.27        | version of the errorpages docker image |
 | `homestack_error_pages_theme`         | matrix      | the theme used by errorpages |
 
-### Variables for Nextcloud
+### Variables for the Nextcloud stack
 
 | Variable                                  | default                   | Description |
 | ----------------------------------------- | ------------------------- | ----------- |
@@ -88,3 +90,23 @@ docker@memoryalpha ~/home-stack
 | `homestack_nextcloud_mysql_path`          | _not set_                 | where are the nextcloud db files stored on disk |
 | `homestack_nextcloud_mysql_password`      | `password`                | password for the nextcloud mysql DB |
 | `homestack_nextcloud_mysql_root_password` | `5UP3r53Cr37P455W0rD`     | password of the mysql root user |
+
+### Variables for the monitoring stack
+
+### Variables for the home automation stack
+
+| Variable                                  | default             | Description |
+| ----------------------------------------- | ------------------- | ----------- |
+| `homestack_ha_active`                     | `true`              | Switch rendering of home automation docker-compose file on or off |
+| `homestack_ha_base_domain`                | `example.com`       | base domain name, will be prefixed with a name for the respective service for the FQDN |
+| `homestack_ha_mosquitto_image_version`    | `2.0.20`            | version of the eclipse-mosquitto image |
+| `homestack_ha_mosquitto_base_path`        | _not set_           | path for storing the mosquitto data on disk |
+| `homestack_ha_mosquitto_users`            | `{}`                | list of users to setup for mosquitto, passwords must already be encoded using `mosquitto_passwd` |
+| `homestack_ha_evcc_image_version`         | `0.133.0`           | version of the evcc image |
+| `homestack_ha_evcc_base_path`             | _not set_           | path for storing the evcc data on disk |
+| `homestack_ha_evcc_installation_id`       | _not set_           | unique ID of the installation (see evcc documentation) |
+| `homestack_ha_evcc_mqtt_user`             | `evcc`              | user used to connect to the mqtt broker |
+| `homestack_ha_evcc_mqtt_password`         | `password`          | password used to connect to the mqtt broker |
+| `homestack_ha_evcc_vw_user`               | `mail@example.com`  | email for accessing the We Connect services |
+| `homestack_ha_evcc_vw_password`           | `supersafe`         | password for accessing the We Connect services |
+| `homestack_ha_evcc_vw_vin`                | `WVWZZZAAZJD000000` | VIN for accessing the We Connect services |

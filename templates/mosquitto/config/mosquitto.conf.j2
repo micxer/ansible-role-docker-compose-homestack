@@ -1,0 +1,35 @@
+user {{ homestack_uid }}
+
+max_packet_size 10240
+
+# Port to use for the default listener.
+listener 1883
+
+# Enable websocket support
+listener 9001
+protocol websockets
+
+persistence true
+persistence_file mosquitto.db
+persistence_location /mosquitto/data/
+
+# Enable authentication
+allow_anonymous true
+
+# Password & ACL files
+password_file /mosquitto/config/passwd
+acl_file /mosquitto/config/acl
+
+# Enable logging
+log_dest file /mosquitto/log/mosquitto.log
+log_dest stdout
+log_type subscribe
+log_type unsubscribe
+log_type websockets
+log_type error
+log_type warning
+log_type notice
+log_type information
+
+# Maximum number of clients that can connect
+max_connections 100

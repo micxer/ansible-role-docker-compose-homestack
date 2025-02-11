@@ -1,0 +1,57 @@
+---
+- name: ha | Ensure mosquitto directories exist
+  ansible.builtin.file:
+    path: "{{ homestack_ha_mosquitto_base_path }}/{{ item.name }}"
+    state: directory
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - name: config
+      mode: '0750'
+    - name: data
+      mode: '0750'
+    - name: log
+      mode: '0750'
+
+- name: ha | Copy mosquitto config files
+  ansible.builtin.template:
+    src: "mosquitto/{{ item }}"
+    dest: "{{ homestack_ha_mosquitto_base_path }}/{{ item | regex_replace('\\.j2$', '') }}"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: false
+  with_items:
+    - config/mosquitto.conf.j2
+    - config/passwd.j2
+    - config/acl.j2
+
+- name: ha | Ensure evcc directories exist
+  ansible.builtin.file:
+    path: "{{ homestack_ha_evcc_base_path }}/{{ item.name }}"
+    state: directory
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - name: data
+      mode: '0750'
+
+- name: ha | Copy evcc configuration
+  ansible.builtin.template:
+    src: "evcc.yaml.j2"
+    dest: "{{ homestack_ha_evcc_base_path }}/evcc.yaml"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true
+
+- name: ha | Write docker-compose file
+  ansible.builtin.template:
+    src: "docker-compose-ha.yml.j2"
+    dest: "{{ homestack_output_path }}/docker-compose-ha.yml"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true
