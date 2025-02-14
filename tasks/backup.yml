@@ -1,0 +1,33 @@
+---
+- name: backup | Make sure target path exists
+  ansible.builtin.file:
+    path: "{{ homestack_backup_script_path }}"
+    state: directory
+    mode: "0755"
+
+- name: backup | Copy script with common functions
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/backup/container_backup_common.sh.j2"
+    dest: "{{ homestack_backup_script_path }}/container_backup_common.sh"
+    mode: "0700"
+  when: homestack_backup
+
+- name: backup | Copy nextcloud backup scripts
+  ansible.builtin.template:
+    src: "{{ template_file }}"
+    dest: "{{ homestack_backup_script_path }}/{{ template_file | basename | regex_replace('\\.j2$', '') }}"
+    mode: "0700"
+  loop: "{{ query('ansible.builtin.fileglob', '{{ role_path }}/templates/backup/nextcloud/*') }}"
+  loop_control:
+    loop_var: template_file
+  when: homestack_nextcloud_active
+
+- name: backup | Copy ha backup scripts
+  ansible.builtin.template:
+    src: "{{ template_file }}"
+    dest: "{{ homestack_backup_script_path }}/{{ template_file | basename | regex_replace('\\.j2$', '') }}"
+    mode: "0700"
+  loop: "{{ query('ansible.builtin.fileglob', '{{ role_path }}/templates/backup/evcc/*') }}"
+  loop_control:
+    loop_var: template_file
+  when: homestack_ha_active

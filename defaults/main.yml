@@ -53,3 +53,6 @@ homestack_ha_evcc_vw_user: mail@example.com
 homestack_ha_evcc_vw_password: supersafe
 homestack_ha_evcc_vw_vin: WVWZZZAAZJD000000
 homestack_ha_mosquitto_users: {}
+
+homestack_backup: true
+homestack_backup_script_path: /usr/local/bin

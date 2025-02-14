@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# logging function
+source {{ homestack_backup_script_path }}/container_backup_common.sh
+
+# Stop evcc container
+log_message "Stopping evcc container"
+if ! docker stop evcc
+then
+    log_message "Failed to stop evcc container" default
+    exit 1
+fi
+
+# Create ZFS snapshot
+log_message "Creating ZFS snapshots of evcc data"
+/usr/sbin/zfs destroy "{{ zfs_pools[0].name }}/evcc@restic" || true
+currentDate=$(date +"%Y%m%d-%H%M%S")
+if ! (/usr/sbin/zfs snapshot "{{ zfs_pools[0].name }}/evcc@${currentDate}" && /usr/sbin/zfs snapshot "{{ zfs_pools[0].name }}/evcc@restic")
+then
+    log_message "Failed to create ZFS snapshots" default
+    exit 1
+fi
+
+# Start evcc container
+log_message "Starting evcc container"
+if ! docker start evcc
+then
+    log_message "Failed to start evcc container" default
+    exit 1
+fi
+
+log_message "Backup successful"

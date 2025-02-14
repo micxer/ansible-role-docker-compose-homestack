@@ -1,0 +1,11 @@
+# Function to write log messages
+log_message() {
+    echo "$(date +"%Y-%m-%d %H:%M:%S") $1" | tee -a /tmp/autorestic_backup.log
+    if [ -z "$2" ]
+    then
+        curl -H "X-Priority: low" -d "$1" {{ autorestic_ntfy_topic }}
+    else
+        curl -H "X-Priority: ${2}" -d "$1" {{ autorestic_ntfy_topic }}
+    fi
+}
+

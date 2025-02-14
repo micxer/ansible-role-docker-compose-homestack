@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# logging function
+source {{ homestack_backup_script_path }}/container_backup_common.sh
+
+log_message "Backup of Nextcloud data to ${AUTORESTIC_LOCATION} failed" default

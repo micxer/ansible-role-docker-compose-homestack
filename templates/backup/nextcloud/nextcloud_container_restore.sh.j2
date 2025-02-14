@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# logging function
+source {{ homestack_backup_script_path }}/container_backup_common.sh
+
+# check that containers are running
+if ! docker ps --filter name=nc-db | grep -q "nc-db"
+then
+    log_message "Nextcloud database container is not running" default
+    exit 1
+fi
+
+if ! docker ps --filter name=nextcloud | grep -q "nextcloud"
+then
+    docker stop nextcloud && log_message "Stopped nextcloud container" default
+fi
+
+# Restore restic snapshot
+if ! autorestic restore -l nextcloud --from backblaze --to "{{ appdata_path }}/nextcloud/" latest:"{{ appdata_path }}/nextcloud/.zfs/snapshot/restic"
+then
+    log_message "Failed to restore restic snapshot"
+    exit 1
+fi
+
+# Look for first file in folder "{{ appdata_path }}/nextcloud/db-backup/"
+backupFile=$(find "{{ appdata_path }}/nextcloud/db-backup/" -type f -printf "%T@ %p\n" | sort -n | tail -n 1 | awk '{print $2}')
+
+# Restore DB backup
+if ! (gunzip < "$backupFile" | docker exec -i "nc-db" /usr/bin/mariadb -u "root" -p"{{ homestack_nextcloud_mysql_root_password }}" "nextcloud")
+then
+    log_message "Failed to restore DB backup"
+    exit 1
+fi
+
+# Remove DB backup and folder
+rm "$backupFile"
+rmdir "{{ appdata_path }}/nextcloud/db-backup"
+
+log_message "Restore successful"
+echo
+echo "Restore successful. To activate the nextcloud container (if it was running before), run the following command:"
+echo "docker start nextcloud"
+echo
+echo "After activating the nextcloud container, you have to deactivate the maintenance mode manually:"
+echo "docker exec -u {{ nextcloud_uid }} nextcloud php occ maintenance:mode --off"
+echo
+echo "If you have restored from scratch, you have to update the .htaccess file manually:"
+echo "docker exec -u {{ nextcloud_uid }} nextcloud php occ maintenance:update:htaccess"
+echo

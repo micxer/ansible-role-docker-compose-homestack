@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# logging function
+source {{ homestack_backup_script_path }}/container_backup_common.sh
+
+# Delete ZFS snapshot
+log_message "Delete ZFS snapshot (@restic) of Nextcloud data"
+if ! /usr/sbin/zfs destroy "{{ zfs_pools[0].name }}/nextcloud@restic"
+then
+    log_message "Failed to delete ZFS snapshot" default
+    exit 1
+fi
+
+log_message "ZFS snapshot removed"
+
+log_message "Remove backup of Nextcloud database"
+if ! rm -r "{{ appdata_path }}/nextcloud/db-backup"
+then
+    log_message "Failed to database backup" default
+    exit 1
+fi
+
+log_message "Database backup removed"
+
+curl -H "X-Priority: low" \
+     -H "X-Title: Backup of Nextcloud data to ${AUTORESTIC_LOCATION} successful" \
+     -H "X-Tags: white_check_mark" \
+     -H "Markdown: yes" \
+    {{ autorestic_ntfy_topic }} \
+     --data-binary @- << EOF
+Files:           ${AUTORESTIC_FILES_ADDED_BACKBLAZE} new,     ${AUTORESTIC_FILES_CHANGED_BACKBLAZE} changed,    ${AUTORESTIC_FILES_UNMODIFIED_BACKBLAZE} unmodified
+Dirs:            ${AUTORESTIC_DIRS_ADDED_BACKBLAZE} new,    ${AUTORESTIC_DIRS_CHANGED_BACKBLAZE} changed,     ${AUTORESTIC_DIRS_UNMODIFIED_BACKBLAZE} unmodified
+Added to the repository: ${AUTORESTIC_ADDED_SIZE_BACKBLAZE}
+
+processed ${AUTORESTIC_PROCESSED_FILES_BACKBLAZE} files, ${AUTORESTIC_PROCESSED_SIZE_BACKBLAZE} in ${AUTORESTIC_PROCESSED_DURATION_BACKBLAZE}
+EOF
