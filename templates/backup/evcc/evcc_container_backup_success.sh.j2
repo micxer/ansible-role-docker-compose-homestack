@@ -14,7 +14,7 @@ fi
 log_message "ZFS snapshot removed"
 
 curl -H "X-Priority: low" \
-     -H "X-Title: Backup of Nextcloud data to ${AUTORESTIC_LOCATION} successful" \
+     -H "X-Title: Backup of evcc data to ${AUTORESTIC_LOCATION} successful" \
      -H "X-Tags: white_check_mark" \
      -H "Markdown: yes" \
     {{ autorestic_ntfy_topic }} \
