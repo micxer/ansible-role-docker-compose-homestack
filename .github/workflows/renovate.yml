@@ -1,4 +1,5 @@
 name: Renovate
+
 on:
   push:
     paths:
@@ -13,7 +14,8 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *" # 2am daily
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
