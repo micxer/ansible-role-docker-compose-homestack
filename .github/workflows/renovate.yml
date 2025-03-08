@@ -3,13 +3,13 @@ name: Renovate
 on:
   push:
     paths:
-      - ".github/workflows/renovate.yaml"
+      - ".github/workflows/renovate.yml"
       - ".github/renovate.json"
     branches:
       - main
   pull_request:
     paths:
-      - ".github/workflows/renovate.yaml"
+      - ".github/workflows/renovate.yml"
       - ".github/renovate.json"
     branches:
       - main
@@ -30,6 +30,12 @@ jobs:
   renovate:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.RENOVATE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -37,7 +43,7 @@ jobs:
         uses: renovatebot/github-action@v41.0.14
         with:
           configurationFile: .github/renovate.json
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           env-regex: "^(?:RENOVATE_\\w+|LOG_LEVEL)$"
         env:
           LOG_LEVEL: debug
