@@ -14,7 +14,7 @@
         "main\\.yml"
       ],
       "matchStrings": [
-        "/#\\s?renovate: image=(?<depName>.*?)\n.+:\\s?(?<currentValue>[\\w+\\.\\-]*)/gm"
+        "#\\s?renovate: image=(?<depName>.*?)\n.+:\\s?(?<currentValue>[\\w+\\.\\-]*)"
       ]
     }
   ]
