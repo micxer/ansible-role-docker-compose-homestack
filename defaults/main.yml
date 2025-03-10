@@ -3,7 +3,9 @@
 homestack_output_path: "~"
 
 # traefik
+# renovate: image=traefik
 homestack_traefik_version: 2.11.3
+# renovate: image=ghcr.io/tarampampam/error-pages
 homestack_error_pages_version: 2.27
 homestack_error_pages_theme: matrix
 # homestack_traefik_hostingde_api_key:  # must be set
@@ -23,6 +25,7 @@ homestack_nextcloud_group: "www-data"
 # homestack_nextcloud_mysql_root_password: ""  # must be set
 homestack_nextcloud_admin_user: admin
 # homestack_nextcloud_admin_password: ""  # must be set
+# renovate: image=nextcloud
 homestack_nextcloud_image_version: 29.0.7-apache
 # homestack_nextcloud_smtp_host: ""  # must be set
 # homestack_nextcloud_smtp_name: ""  # must be set
@@ -33,8 +36,10 @@ homestack_nextcloud_base_domain: example.com
 # homestack_monitoring
 homestack_monitoring_active: true
 homestack_monitoring_base_domain: example.com
+# renovate: image=prom/prometheus
 homestack_monitoring_prometheus_image_version: v2.55.1
 # homestack_monitoring_prometheus_base_path: ""  # must be set
+# renovate: image=grafana/grafana-oss
 homestack_monitoring_grafana_image_version: 11.4.0
 # homestack_monitoring_grafana_admin_password: ""  # must be set
 # homestack_monitoring_grafana_base_path: ""  # must be set
