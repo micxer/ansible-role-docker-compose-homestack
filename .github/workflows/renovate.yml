@@ -46,7 +46,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           env-regex: "^(?:RENOVATE_\\w+|LOG_LEVEL)$"
         env:
-          LOG_LEVEL: debug
+          LOG_LEVEL: info
           RENOVATE_REPOSITORIES: 'micxer/ansible-role-docker-compose-homestack'
           RENOVATE_AUTODISCOVER: false
           RENOVATE_AUTOMERGE: false
