@@ -6,6 +6,7 @@
   ],
   "dependencyDashboard": true,
   "extends": ["config:recommended", "config:best-practices"],
+  "rangeStrategy": "bump",
   "customManagers": [
     {
       "customType": "regex",
