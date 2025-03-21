@@ -62,6 +62,7 @@ homestack_ha_evcc_mqtt_password: password
 homestack_ha_evcc_vw_user: mail@example.com
 homestack_ha_evcc_vw_password: supersafe
 homestack_ha_evcc_vw_vin: WVWZZZAAZJD000000
+homestack_ha_evcc_ntfy_uri: https://ntfy.sh/abcdefghijklmnopqrstuvwxyz012345
 
 homestack_backup: true
 homestack_backup_script_path: /usr/local/bin

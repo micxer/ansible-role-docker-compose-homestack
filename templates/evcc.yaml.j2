@@ -76,3 +76,30 @@ site:
     - plenticore
     battery:
     - byd
+
+messaging:
+  events:
+    start:
+      title: ⚡️ Charge started
+      msg: Started charging in "${mode}" mode
+    stop:
+      title: ✅ Charge finished
+      msg: Finished charging ${chargedEnergy:%.1fk}kWh in ${chargeDuration}.
+    connect:
+      title: 🔌 Car connected
+      msg: "Car connected at ${pvPower:%.1fk}kW PV"
+    disconnect:
+      title: 🔌 Car disconnected
+      msg: Car disconnected after ${connectedDuration}
+    soc:
+      title: 🔋 SOC updated
+      msg: Battery charged to ${vehicleSoc:%.0f}%
+    guest:
+      title: ❓ Unknown vehicle
+      msg: Unknown vehicle, guest connected?
+
+  services:
+  - type: ntfy
+    uri: "{{ homestack_ha_evcc_ntfy_uri }}"
+    priority: default
+    tags: id3
