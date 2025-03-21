@@ -47,9 +47,12 @@ homestack_monitoring_grafana_image_version: 11.5.2
 # homestack_ha
 homestack_ha_active: true
 homestack_ha_base_domain: example.com
+
 # renovate: image=eclipse-mosquitto
 homestack_ha_mosquitto_image_version: 2.0.21
 # homestack_ha_mosquitto_base_path: ""  # must be set
+homestack_ha_mosquitto_users: {}
+
 # renovate: image=evcc/evcc
 homestack_ha_evcc_image_version: 0.201.1
 # homestack_ha_evcc_base_path: ""  # must be set
@@ -59,7 +62,6 @@ homestack_ha_evcc_mqtt_password: password
 homestack_ha_evcc_vw_user: mail@example.com
 homestack_ha_evcc_vw_password: supersafe
 homestack_ha_evcc_vw_vin: WVWZZZAAZJD000000
-homestack_ha_mosquitto_users: {}
 
 homestack_backup: true
 homestack_backup_script_path: /usr/local/bin
