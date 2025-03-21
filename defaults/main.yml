@@ -26,7 +26,7 @@ homestack_nextcloud_group: "www-data"
 homestack_nextcloud_admin_user: admin
 # homestack_nextcloud_admin_password: ""  # must be set
 # renovate: image=nextcloud
-homestack_nextcloud_image_version: 29.0.14-apache
+homestack_nextcloud_image_version: 30.0.8-apache
 # homestack_nextcloud_smtp_host: ""  # must be set
 # homestack_nextcloud_smtp_name: ""  # must be set
 # homestack_nextcloud_smtp_password: ""  # must be set
