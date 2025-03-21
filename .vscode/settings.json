@@ -1,0 +1,8 @@
+{
+  "conventionalCommits.scopes": [
+    "ha",
+    "monitoring",
+    "nextcloud",
+    "traefik",
+  ]
+}
