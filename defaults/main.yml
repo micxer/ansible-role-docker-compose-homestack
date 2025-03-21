@@ -51,7 +51,7 @@ homestack_ha_base_domain: example.com
 homestack_ha_mosquitto_image_version: 2.0.21
 # homestack_ha_mosquitto_base_path: ""  # must be set
 # renovate: image=evcc/evcc
-homestack_ha_evcc_image_version: 0.201.0
+homestack_ha_evcc_image_version: 0.201.1
 # homestack_ha_evcc_base_path: ""  # must be set
 # homestack_ha_evcc_installation_id: ""  # must be set
 homestack_ha_evcc_mqtt_user: evcc
