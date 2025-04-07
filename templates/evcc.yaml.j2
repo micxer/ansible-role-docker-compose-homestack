@@ -103,3 +103,12 @@ messaging:
     uri: "{{ homestack_ha_evcc_ntfy_uri }}"
     priority: default
     tags: id3
+
+tariffs:
+  currency: EUR
+  grid:
+    type: fixed
+    price: {{ homestack_ha_evcc_grid_costs }} # EUR/kWh
+  feedin:
+    type: fixed
+    price: {{ homestack_ha_evcc_feedin_revenue }} # EUR/kWh
