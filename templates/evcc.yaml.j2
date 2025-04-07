@@ -49,6 +49,15 @@ chargers:
   name: warp3
   user: "{{ homestack_ha_evcc_mqtt_user }}"
   password: "{{ homestack_ha_evcc_mqtt_password }}"
+  enable:
+    threshold: 0  # minimum export power (W)
+    delay: 1m
+  disable:
+    threshold: 200  # maximum import power (W)
+    delay: 3m
+  phases: 0
+  minCurrent: 5
+  maxCurrent: 16
 
 vehicles:
 - type: template
@@ -70,6 +79,7 @@ loadpoints:
 
 site:
   title: Zuhause
+  residualPower: 200
   meters:
     grid: ksem
     pv:
