@@ -23,8 +23,6 @@ services:
     networks:
       - traefik
       - monitoring
-    ports:
-      - 9090:9090
     restart: unless-stopped
     user: "{{ homestack_uid }}:{{ homestack_gid }}"
     volumes:
@@ -54,8 +52,6 @@ services:
     networks:
       - traefik
       - monitoring
-    ports:
-     - 3000:3000
     restart: unless-stopped
     user: "{{ homestack_uid }}:{{ homestack_gid }}"
     volumes:

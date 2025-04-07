@@ -33,9 +33,6 @@ services:
     networks:
       - traefik
       - home_automation
-    ports:
-      - 1883:1883  # MQTT
-      #- 9001:9001  # MQTT Websocket
     restart: unless-stopped
     user: "{{ homestack_uid }}:{{ homestack_gid }}"
     volumes:
@@ -62,11 +59,11 @@ services:
     networks:
       - traefik
       - home_automation
-    ports:
-      #- 4712:4712/tcp  # EEBus
-      - 7070:7070/tcp  # UI and /api
-      - 8887:8887/tcp  # OCPP charger
-      #- 8899:8899/udp  # Modbus UDP
+    # ports:
+    #   - 4712:4712/tcp  # EEBus
+    #   - 7070:7070/tcp  # UI and /api
+    #   - 8887:8887/tcp  # OCPP charger
+    #   - 8899:8899/udp  # Modbus UDP
     restart: unless-stopped
     volumes:
       - "{{ homestack_ha_evcc_base_path }}/evcc.yaml:/etc/evcc.yaml"
