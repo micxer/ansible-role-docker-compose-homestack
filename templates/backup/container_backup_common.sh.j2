@@ -1,11 +1,20 @@
+#!/bin/bash
+
 # Function to write log messages
 log_message() {
-    echo "$(date +"%Y-%m-%d %H:%M:%S") $1" | tee -a /tmp/autorestic_backup.log
-    if [ -z "$2" ]
-    then
-        curl -H "X-Priority: low" -d "$1" {{ autorestic_ntfy_topic }}
-    else
-        curl -H "X-Priority: ${2}" -d "$1" {{ autorestic_ntfy_topic }}
-    fi
+    local log_file="/var/log/autorestic_backup.log"
+    local valid_priorities=(min low default high urgent)
+    local priority="default"
+
+    # Validate the second parameter
+    for valid_priority in "${valid_priorities[@]}"; do
+        if [[ "$valid_priority" == "$2" ]]; then
+            priority="$2"
+            break
+        fi
+    done
+
+    echo "$(date +"%Y-%m-%d %H:%M:%S") $1" | tee -a "$log_file"
+    curl -H "X-Priority: ${priority}" -d "$1" {{ autorestic_ntfy_topic }}
 }
 
