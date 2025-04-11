@@ -18,6 +18,12 @@ cleanup() {
         log_message "Failed to disable maintenance mode on cleanup" default
     fi
     
+    # Clean up temporary files
+    if [ -f "$MYSQL_CNF" ]; then
+        docker exec nc-db rm -f /tmp/backup.cnf
+        rm -f "$MYSQL_CNF"
+    fi
+    
     exit $exit_code
 }
 
@@ -86,10 +92,6 @@ if ! docker exec "nc-db" /usr/bin/mariadb-dump --defaults-extra-file=/tmp/backup
     log_message "Failed to create backup" default
     exit 1
 fi
-
-# Clean up
-docker exec nc-db rm -f /tmp/backup.cnf
-rm -f "$MYSQL_CNF"
 
 log_message "Database backup created"
 
