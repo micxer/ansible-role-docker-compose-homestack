@@ -16,7 +16,7 @@ then
 fi
 
 # Restore restic snapshot
-if ! autorestic restore -l nextcloud --from backblaze --to "{{ appdata_path }}/nextcloud/" latest:"{{ appdata_path }}/nextcloud/.zfs/snapshot/restic"
+if ! autorestic restore --location nextcloud --from backblaze --to "{{ appdata_path }}/nextcloud/" latest:"{{ appdata_path }}/nextcloud/.zfs/snapshot/restic"
 then
     log_message "Failed to restore restic snapshot"
     exit 1
