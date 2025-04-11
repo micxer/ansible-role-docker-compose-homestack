@@ -72,7 +72,7 @@ MYSQL_CNF=$(mktemp)
 cat > "$MYSQL_CNF" << EOF
 [client]
 user=root
-password={{ homestack_nextcloud_mysql_root_password }}
+password='{{ homestack_nextcloud_mysql_root_password }}'
 EOF
 chmod 600 "$MYSQL_CNF"
 
@@ -108,4 +108,4 @@ else
     # TODO: Cleanup old snapshots
 fi
 
-log_message "Backup successful"
+log_message "Local Nextcloud backup successful"
