@@ -17,7 +17,7 @@ cleanup() {
     if ! docker exec -u {{ nextcloud_uid }} nextcloud php occ maintenance:mode --off; then
         log_message "Failed to disable maintenance mode on cleanup" default
     fi
-    
+
     # Clean up temporary files
     if [ -f "$MYSQL_CNF" ]; then
         docker exec nc-db rm -f /tmp/backup.cnf
@@ -95,19 +95,14 @@ fi
 
 log_message "Database backup created"
 
-# Check if ZFS is available
-if ! command -v /usr/sbin/zfs &> /dev/null; then
-    log_message "ZFS command not found, skipping snapshots" default
-else
-    log_message "Creating ZFS snapshots of Nextcloud data"
-    /usr/sbin/zfs destroy "{{ zfs_pools[0].name }}/nextcloud@restic" 2>/dev/null || true
-    if ! (/usr/sbin/zfs snapshot "{{ zfs_pools[0].name }}/nextcloud@${currentDate}" && 
-          /usr/sbin/zfs snapshot "{{ zfs_pools[0].name }}/nextcloud@restic"); then
-        log_message "Failed to create ZFS snapshots" default
-        exit 1
-    fi
-
-    # TODO: Cleanup old snapshots
+log_message "Creating ZFS snapshots of Nextcloud data"
+/usr/sbin/zfs destroy "{{ zfs_pools[0].name }}/nextcloud@restic" 2>/dev/null || true
+if ! (/usr/sbin/zfs snapshot "{{ zfs_pools[0].name }}/nextcloud@${currentDate}" && 
+        /usr/sbin/zfs snapshot "{{ zfs_pools[0].name }}/nextcloud@restic"); then
+    log_message "Failed to create ZFS snapshots" default
+    exit 1
 fi
+
+# TODO: Cleanup old snapshots
 
 log_message "Local Nextcloud backup successful"
