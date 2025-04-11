@@ -7,12 +7,14 @@ log_message() {
     local priority="default"
 
     # Validate the second parameter
-    for valid_priority in "${valid_priorities[@]}"; do
-        if [[ "$valid_priority" == "$2" ]]; then
-            priority="$2"
-            break
-        fi
-    done
+    if [[ -n "${2-}" ]]; then
+        for valid_priority in "${valid_priorities[@]}"; do
+            if [[ "$valid_priority" == "$2" ]]; then
+                priority="$2"
+                break
+            fi
+        done
+    fi
 
     echo "$(date +"%Y-%m-%d %H:%M:%S") $1" | tee -a "$log_file"
     curl -H "X-Priority: ${priority}" -d "$1" {{ autorestic_ntfy_topic }}
