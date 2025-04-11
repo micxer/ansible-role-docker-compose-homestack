@@ -3,14 +3,6 @@
 # logging function
 source {{ homestack_backup_script_path }}/container_backup_common.sh
 
-# Delete ZFS snapshot
-log_message "Delete ZFS snapshot (@restic) of Nextcloud data"
-if ! /usr/sbin/zfs destroy "{{ zfs_pools[0].name }}/nextcloud@restic"
-then
-    log_message "Failed to delete ZFS snapshot" default
-    exit 1
-fi
-
 log_message "ZFS snapshot removed"
 
 log_message "Remove backup of Nextcloud database"
