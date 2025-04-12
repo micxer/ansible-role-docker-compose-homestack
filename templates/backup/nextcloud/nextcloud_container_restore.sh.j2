@@ -1,7 +1,29 @@
 #!/bin/bash
 
+# Exit on error, undefined variables, and pipe failures
+set -euo pipefail
+
 # logging function
 source {{ homestack_backup_script_path }}/container_backup_common.sh
+
+# Function to disable maintenance mode and exit
+cleanup() {
+    local exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        log_message "An error occurred restoration (exit code: $exit_code)" high
+    fi
+    
+    # Clean up temporary files
+    if [ -f "$MYSQL_CNF" ]; then
+        docker exec nc-db rm -f /tmp/restore.cnf
+        rm -f "$MYSQL_CNF"
+    fi
+    
+    exit $exit_code
+}
+
+# Register the cleanup function to run on script exit
+trap cleanup EXIT
 
 # check that containers are running
 if ! docker ps --filter name=nc-db | grep -q "nc-db"
@@ -22,8 +44,20 @@ then
     exit 1
 fi
 
+# Check if backup folder exists and contains files
+if [ ! -d "{{ appdata_path }}/nextcloud/db-backup/" ] || [ -z "$(ls -A "{{ appdata_path }}/nextcloud/db-backup/")" ]; then
+    log_message "No database backup files found" error
+    exit 1
+fi
+
 # Look for first file in folder "{{ appdata_path }}/nextcloud/db-backup/"
 backupFile=$(find "{{ appdata_path }}/nextcloud/db-backup/" -type f -printf "%T@ %p\n" | sort -n | tail -n 1 | awk '{print $2}')
+
+# Validate backup file after finding it
+if [ -z "$backupFile" ] || [ ! -f "$backupFile" ]; then
+    log_message "Could not find a valid backup file" error
+    exit 1
+fi
 
 # Restore DB backup
 if ! (gunzip < "$backupFile" | docker exec -i "nc-db" /usr/bin/mariadb -u "root" -p"{{ homestack_nextcloud_mysql_root_password }}" "nextcloud")
@@ -32,9 +66,16 @@ then
     exit 1
 fi
 
-# Remove DB backup and folder
-rm "$backupFile"
-rmdir "{{ appdata_path }}/nextcloud/db-backup"
+# Only remove backup files after confirming restoration success
+# Test DB connection first
+if docker exec "nc-db" /usr/bin/mariadb -u "root" -p"{{ homestack_nextcloud_mysql_root_password }}" -e "SHOW TABLES" nextcloud > /dev/null; then
+    log_message "Database restore verification successful" default
+    rm "$backupFile"
+    rmdir "{{ appdata_path }}/nextcloud/db-backup"
+else
+    log_message "Database restore verification failed - keeping backup files" error
+    exit 1
+fi
 
 log_message "Restore successful"
 echo
