@@ -18,5 +18,12 @@
         "#\\s?renovate: image=(?<depName>.*?)\n.+:\\s?(?<currentValue>[\\w+\\.\\-]*)"
       ]
     }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["nextcloud"],
+      "rangeStrategy": "bump"
+    }
   ]
 }
