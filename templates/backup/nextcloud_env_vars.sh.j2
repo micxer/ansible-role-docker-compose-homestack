@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  echo "This script must be sourced, not executed directly."
+  exit 1
+fi
+
+readonly NEXTCLOUD_UID="{{ nextcloud_uid }}"
+readonly MYSQL_ROOT_PASSWORD="{{ homestack_nextcloud_mysql_root_password }}"
+readonly ZPOOL_NC="{{ zfs_pools[0].name }}"
+
+readonly NEXTCLOUD_DIR="{{ appdata_path }}/nextcloud"
+
+readonly NTFY_TOPIC="{{ autorestic_ntfy_topic }}"
