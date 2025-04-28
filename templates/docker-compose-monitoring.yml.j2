@@ -16,7 +16,7 @@ services:
       start_period: 40s 
     labels:
       traefik.enable: true
-      traefik.http.routers.prometheus.rule: Host(`prometheus.{{ homestack_monitoring_base_domain }}`)
+      traefik.http.routers.prometheus.rule: "Host(`prometheus.{{ homestack_monitoring_base_domain }}`)"
       traefik.http.routers.prometheus.entrypoints: websecure
       traefik.http.routers.prometheus.tls.options: modern@file
       traefik.docker.network: traefik-net
@@ -45,7 +45,7 @@ services:
       start_period: 30s 
     labels:
       traefik.enable: true
-      traefik.http.routers.grafana.rule: Host(`grafana.{{ homestack_monitoring_base_domain }}`)
+      traefik.http.routers.grafana.rule: "Host(`grafana.{{ homestack_monitoring_base_domain }}`)"
       traefik.http.routers.grafana.entrypoints: websecure
       traefik.http.routers.grafana.tls.options: modern@file
       traefik.docker.network: traefik-net

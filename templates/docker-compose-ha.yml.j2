@@ -14,7 +14,7 @@ services:
       traefik.enable: true
       traefik.docker.network: traefik-net
 
-      traefik.tcp.routers.mosquitto.rule: HostSNI(`mosquitto.{{ homestack_ha_base_domain }}`)
+      traefik.tcp.routers.mosquitto.rule: "HostSNI(`mosquitto.{{ homestack_ha_base_domain }}`)"
       traefik.tcp.routers.mosquitto.entrypoints: mqtts
       traefik.tcp.routers.mosquitto.service: mosquitto_service
       traefik.tcp.routers.mosquitto.tls: true
@@ -23,7 +23,7 @@ services:
       traefik.tcp.services.mosquitto_service.loadbalancer.server.port: 1883
 
       # Websock uses the http protocol but in combination with a TCP handler on port 8883 for mqtt you need to specify it
-      traefik.http.routers.mqttws.rule: Host(`mosquitto.{{ homestack_ha_base_domain }}`)
+      traefik.http.routers.mqttws.rule: "Host(`mosquitto.{{ homestack_ha_base_domain }}`)"
       traefik.http.routers.mqttws.entrypoints: websecure
       traefik.http.routers.mqttws.service: websockservice
       traefik.http.routers.mqttws.tls: true
@@ -51,7 +51,7 @@ services:
     image: evcc/evcc:{{ homestack_ha_evcc_image_version }}
     labels:
       traefik.enable: true
-      traefik.http.routers.evcc.rule: Host(`evcc.{{ homestack_monitoring_base_domain }}`)
+      traefik.http.routers.evcc.rule: "Host(`evcc.{{ homestack_monitoring_base_domain }}`)"
       traefik.http.routers.evcc.entrypoints: websecure
       traefik.http.routers.evcc.tls.options: modern@file
       traefik.docker.network: traefik-net

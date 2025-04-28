@@ -14,44 +14,25 @@ services:
       timeout: 5s
       retries: 3
     labels:
-      traefik.enable: "true"
+      traefik.enable: true
 
-      # # catch all traefik errors
-      traefik.http.routers.globalerrorpage.rule: hostregexp(`{host:.+}`)
+      # catch all traefik errors
+      traefik.http.routers.globalerrorpage.rule: "HostRegexp(`{host:.+}`)"
       traefik.http.routers.globalerrorpage.entrypoints: websecure
       traefik.http.routers.globalerrorpage.service: error-pages-service
-      # traefik.http.routers.globalerrorpage.tls.certresolver: hostingde
-      traefik.http.routers.globalerrorpage.priority: 1
-
-      # # create a middleware to replace 404 errors by a standard page
-      # traefik.http.middlewares.errorpage.errors.status: 404
-      # traefik.http.middlewares.errorpage.errors.service: error-pages-service
-      # traefik.http.middlewares.errorpage.errors.query: /{status}
-
-      # # create a middleware to redirect to www
-      # traefik.http.middlewares.redirect-to-www.redirectregex.regex: (https|http)://(?:www.)?(.*)
-      # traefik.http.middlewares.redirect-to-www.redirectregex.replacement: https://www.$${2}
-
-      # # create a middleware to redirect to non-www
-      # traefik.http.middlewares.redirect-to-nonwww.redirectregex.regex: (https|http)://(www\.(.*))
-      # traefik.http.middlewares.redirect-to-nonwww.redirectregex.replacement: https://$${3}
-
-      # create a middleware named admin, to request a basic authentification of users
-      # you can generate a user:password pair with this command :
-      # echo $(htpasswd -nb user password) | sed -e s/\\$/\\$\\$/g
-      # traefik.http.middlewares.admin.basicauth.users: admin:HASHED_PASSWORD
+      traefik.http.routers.globalerrorpage.priority: "1"
 
       # api secure
-      traefik.http.routers.traefik.rule: Host(`traefik.{{ homestack_traefik_base_domain }}`)
+      traefik.http.routers.traefik.rule: "Host(`traefik.{{ homestack_traefik_base_domain }}`)"
       traefik.http.routers.traefik.entrypoints: websecure
       traefik.http.routers.traefik.service: api@internal
-      traefik.http.routers.traefik.middlewares: "default@file"
+      traefik.http.routers.traefik.middlewares: default@file
       traefik.http.routers.traefik.tls.options: modern@file
 
       # ping secure
-      traefik.http.routers.ping.rule: Host(`traefik.{{ homestack_traefik_base_domain }}`) && PathPrefix(`/ping`)
+      traefik.http.routers.ping.rule: "Host(`traefik.{{ homestack_traefik_base_domain }}`) && PathPrefix(`/ping`)"
       traefik.http.routers.ping.entrypoints: websecure
-      traefik.http.routers.ping.middlewares: "default@file"
+      traefik.http.routers.ping.middlewares: default@file
       traefik.http.routers.ping.service: ping@internal
       traefik.http.routers.ping.tls.options: modern@file
     networks:
@@ -74,13 +55,13 @@ services:
     labels:
       traefik.enable: true
       traefik.http.routers.error-pages-router.rule: "HostRegexp(`{host:.+}`)"
-      traefik.http.routers.error-pages-router.priority: "1"
-      traefik.http.routers.error-pages-router.entrypoints: "websecure"
-      traefik.http.routers.error-pages-router.middlewares: "error-pages-middleware"
+      traefik.http.routers.error-pages-router.priority: 1
+      traefik.http.routers.error-pages-router.entrypoints: websecure
+      traefik.http.routers.error-pages-router.middlewares: error-pages-middleware
       traefik.http.middlewares.error-pages-middleware.errors.status: "400-599"
-      traefik.http.middlewares.error-pages-middleware.errors.service: "error-pages-service"
+      traefik.http.middlewares.error-pages-middleware.errors.service: error-pages-service
       traefik.http.middlewares.error-pages-middleware.errors.query: "/{status}.html"
-      traefik.http.services.error-pages-service.loadbalancer.server.port: "8080"
+      traefik.http.services.error-pages-service.loadbalancer.server.port: 8080
     networks:
       - traefik
     depends_on:
