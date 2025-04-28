@@ -17,7 +17,7 @@ services:
       traefik.enable: true
 
       # catch all traefik errors
-      traefik.http.routers.globalerrorpage.rule: "HostRegexp(`{host:.+}`)"
+      traefik.http.routers.globalerrorpage.rule: "HostRegexp(`{.+}`)"
       traefik.http.routers.globalerrorpage.entrypoints: websecure
       traefik.http.routers.globalerrorpage.service: error-pages-service
       traefik.http.routers.globalerrorpage.priority: "1"
@@ -54,7 +54,7 @@ services:
     image: ghcr.io/tarampampam/error-pages:{{ homestack_error_pages_version }}
     labels:
       traefik.enable: true
-      traefik.http.routers.error-pages-router.rule: "HostRegexp(`{host:.+}`)"
+      traefik.http.routers.error-pages-router.rule: "HostRegexp(`{.+}`)"
       traefik.http.routers.error-pages-router.priority: 1
       traefik.http.routers.error-pages-router.entrypoints: websecure
       traefik.http.routers.error-pages-router.middlewares: error-pages-middleware
