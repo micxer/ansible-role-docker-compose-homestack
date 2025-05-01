@@ -10,6 +10,7 @@
     src: "{{ role_path }}/templates/backup/container_backup_common.sh.j2"
     dest: "{{ homestack_backup_script_path }}/container_backup_common.sh"
     mode: "0700"
+    state: absent
   when: homestack_backup
 
 - name: backup | Copy nextcloud backup script
@@ -26,12 +27,25 @@
     mode: "0700"
   when: homestack_nextcloud_active
 
-- name: backup | Copy ha backup scripts
-  ansible.builtin.template:
-    src: "{{ template_file }}"
-    dest: "{{ homestack_backup_script_path }}/{{ template_file | basename | regex_replace('\\.j2$', '') }}"
-    mode: "0700"
+- name: backup | Remove old ha backup scripts
+  ansible.builtin.file:
+    path: "{{ homestack_backup_script_path }}/{{ template_file | basename | regex_replace('\\.j2$', '') }}"
+    state: absent
   loop: "{{ query('ansible.builtin.fileglob', '{{ role_path }}/templates/backup/evcc/*') }}"
   loop_control:
     loop_var: template_file
+  when: homestack_ha_active
+
+- name: backup | Copy evcc backup script
+  ansible.builtin.copy:
+    src: "backup/evcc_container_backup.sh"
+    dest: "{{ homestack_backup_script_path }}/evcc_container_backup.sh"
+    mode: "0700"
+  when: homestack_ha_active
+
+- name: backup | Copy evcc backup script env vars file
+  ansible.builtin.template:
+    src: "backup/evcc_env_vars.sh.j2"
+    dest: "{{ homestack_backup_script_path }}/evcc_env_vars.sh"
+    mode: "0700"
   when: homestack_ha_active
