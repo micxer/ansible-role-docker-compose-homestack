@@ -5,11 +5,9 @@
     state: directory
     mode: "0755"
 
-- name: backup | Copy script with common functions
-  ansible.builtin.template:
-    src: "{{ role_path }}/templates/backup/container_backup_common.sh.j2"
-    dest: "{{ homestack_backup_script_path }}/container_backup_common.sh"
-    mode: "0700"
+- name: backup | Remove script with common functions
+  ansible.builtin.file:
+    path: "{{ homestack_backup_script_path }}/container_backup_common.sh"
     state: absent
   when: homestack_backup
 
