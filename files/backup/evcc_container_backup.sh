@@ -118,3 +118,26 @@ restore() {
 
   log_message "Restore successful" low
 }
+
+# Check if the script is being run as a standalone script
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    # Check the first argument to determine the action
+    case "$1" in
+        before)
+            before
+            ;;
+        success)
+            success
+            ;;
+        failure)
+            failure
+            ;;
+        restore)
+            restore
+            ;;
+        *)
+            echo "Usage: $0 {before|success|failure|restore}"
+            exit 1
+            ;;
+    esac
+fi
