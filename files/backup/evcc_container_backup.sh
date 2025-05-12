@@ -33,7 +33,7 @@ log_message() {
     curl -H "X-Priority: ${priority}" -d "$1" "$NTFY_TOPIC"
 }
 
-# Function to disable maintenance mode and exit
+# Log before exiting
 cleanup() {
     local exit_code=$?
     if [ $exit_code -ne 0 ]; then
@@ -73,7 +73,7 @@ before() {
       exit 1
   fi
 
-  log_message "Local evcc backup successful" low
+  log_message "Local evcc backup snapshot created" low
 }
 
 success() {
