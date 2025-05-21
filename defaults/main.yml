@@ -7,7 +7,7 @@ homestack_output_path: "~"
 homestack_traefik_version: v3.3.6
 # renovate: image=ghcr.io/tarampampam/error-pages
 homestack_error_pages_version: 3.3
-homestack_error_pages_theme: matrix
+homestack_error_pages_theme: app-down
 # homestack_traefik_hostingde_api_key:  # must be set
 homestack_traefik_hostingde_domain: example.com
 homestack_traefik_base_domain: example.com
