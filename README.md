@@ -70,7 +70,7 @@ docker@memoryalpha ~/home-stack
 | `homestack_traefik_base_domain`       | example.com | base domain name, will be prefixed with `traefik.` for the FQDN |
 | `homestack_traefik_base_path`         | _not set_   | where are the traefik files stored on disk |
 | `homestack_error_pages_version`       | 2.27        | version of the errorpages docker image |
-| `homestack_error_pages_theme`         | matrix      | the theme used by errorpages |
+| `homestack_error_pages_theme`         | app-down    | the theme used by errorpages |
 
 ### Variables for the Nextcloud stack
 
