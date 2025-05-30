@@ -8,11 +8,11 @@
     mode: "{{ item.mode }}"
   with_items:
     - name: config
-      mode: '0750'
+      mode: "0750"
     - name: data
-      mode: '0750'
+      mode: "0750"
     - name: log
-      mode: '0750'
+      mode: "0750"
 
 - name: ha | Copy mosquitto config files
   ansible.builtin.template:
@@ -36,7 +36,7 @@
     mode: "{{ item.mode }}"
   with_items:
     - name: data
-      mode: '0750'
+      mode: "0750"
 
 - name: ha | Copy evcc configuration
   ansible.builtin.template:

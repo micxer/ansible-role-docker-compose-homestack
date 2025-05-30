@@ -8,7 +8,7 @@
     mode: "{{ item.mode }}"
   with_items:
     - name: data
-      mode: '0750'
+      mode: "0750"
 
 - name: monitoring | Copy prometheus specific files to their respective directories
   ansible.builtin.copy:
