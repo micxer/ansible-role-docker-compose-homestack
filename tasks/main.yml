@@ -28,6 +28,10 @@
   ansible.builtin.include_tasks: ha.yml
   when: homestack_ha_active
 
+- name: Include vwsfriend stack tasks
+  ansible.builtin.include_tasks: vwsfriend.yml
+  when: homestack_vwsfriend_active
+
 - name: Include backup tasks
   ansible.builtin.include_tasks: backup.yml
   when: homestack_backup
