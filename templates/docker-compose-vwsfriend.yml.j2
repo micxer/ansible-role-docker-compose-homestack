@@ -24,7 +24,6 @@ services:
     labels:
       traefik.enable: true
       traefik.docker.network: traefik-net
-
       traefik.http.routers.vwsfriend.rule: "Host(`vwsfriend.{{ homestack_vwsfriend_base_domain }}`)"
       traefik.http.routers.vwsfriend.entrypoints: websecure
       traefik.http.routers.vwsfriend.tls.options: modern@file
@@ -71,7 +70,7 @@ services:
       DB_NAME: "{{ homestack_vwsfriend_db_name }}"
       VWSFRIEND_USERNAME: "{{ homestack_vwsfriend_username }}"
       VWSFRIEND_PASSWORD: "{{ homestack_vwsfriend_password }}"
-      VWSFRIEND_HOSTNAME: "vwsfriend.{{ homestack_vwsfriend_base_domain }}"
+      VWSFRIEND_HOSTNAME: "vwsfriend"
       VWSFRIEND_PORT: 4000
     healthcheck:
       test: ["CMD", "wget", "-O", "/dev/null", "http://localhost:3000"]
@@ -82,10 +81,10 @@ services:
     image: tillsteinbach/vwsfriend-grafana:{{ homestack_vwsfriend_grafana_version }}
     labels:
       traefik.enable: true
-      traefik.http.routers.grafana.rule: "Host(`vwsfriend-grafana.{{ homestack_vwsfriend_base_domain }}`)"
-      traefik.http.routers.grafana.entrypoints: websecure
-      traefik.http.routers.grafana.tls.options: modern@file
       traefik.docker.network: traefik-net
+      traefik.http.routers.vwsfriend-grafana.rule: "Host(`vwsfriend-grafana.{{ homestack_vwsfriend_base_domain }}`)"
+      traefik.http.routers.vwsfriend-grafana.entrypoints: websecure
+      traefik.http.routers.vwsfriend-grafana.tls.options: modern@file
     networks:
       - traefik
       - vwsfriend
