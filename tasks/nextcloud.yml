@@ -8,11 +8,11 @@
     mode: "{{ item.mode }}"
   with_items:
     - name: custom_apps
-      mode: '0750'
+      mode: "0750"
     - name: data
-      mode: '0770'
+      mode: "0770"
     - name: config
-      mode: '0750'
+      mode: "0750"
 
 - name: nextcloud | Copy nextcloud specific files to their respective directories
   ansible.builtin.copy:

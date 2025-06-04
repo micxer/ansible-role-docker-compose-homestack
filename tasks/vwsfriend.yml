@@ -1,0 +1,24 @@
+---
+- name: vwsfriend | Ensure vwsfriend directories exist
+  ansible.builtin.file:
+    path: "{{ homestack_vwsfriend_base_path }}/{{ item.name }}"
+    state: directory
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - name: config
+      mode: "0750"
+    - name: db
+      mode: "0750"
+    - name: grafana
+      mode: "0750"
+
+- name: vwsfriend | Write docker-compose file
+  ansible.builtin.template:
+    src: "docker-compose-vwsfriend.yml.j2"
+    dest: "{{ homestack_output_path }}/docker-compose-vwsfriend.yml"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true
