@@ -6,12 +6,21 @@ services:
     depends_on:
       vwsfriend-db:
         condition: service_healthy
-    image: tillsteinbach/vwsfriend:{{ homestack_vwsfriend_image_version }}
+    environment:
+      VWSFRIEND_USERNAME: "{{ homestack_vwsfriend_username }}"
+      VWSFRIEND_PASSWORD: "{{ homestack_vwsfriend_password }}"
+      WECONNECT_USER: "{{ homestack_vwsfriend_weconnect_user }}"
+      WECONNECT_PASSWORD: "{{ homestack_vwsfriend_weconnect_password | replace('$', '$$') }}"
+      WECONNECT_SPIN: "{{ homestack_vwsfriend_weconnect_spin }}"
+      WECONNECT_INTERVAL: "{{ homestack_vwsfriend_weconnect_interval }}"
+      DATABASE_URL: "postgresql://{{ homestack_vwsfriend_db_user }}:{{ homestack_vwsfriend_db_password }}@vwsfriend-db:5432/{{ homestack_vwsfriend_db_name }}"
+      ADDITIONAL_PARAMETERS: "--with-database --with-abrp {{ homestack_vwsfriend_additional_parameters }}"
     healthcheck:
-      test: (wget -qO- http://localhost:{{ homestack_vwsfriend_port }}/healthcheck | grep "ok" -q) || exit 1
+      test: (wget -qO- http://localhost:4000/healthcheck | grep "ok" -q) || exit 1
       interval: 10s
       timeout: 3s
       retries: 3
+    image: tillsteinbach/vwsfriend:{{ homestack_vwsfriend_image_version }}
     labels:
       traefik.enable: true
       traefik.docker.network: traefik-net
@@ -19,62 +28,42 @@ services:
       traefik.http.routers.vwsfriend.rule: "Host(`vwsfriend.{{ homestack_vwsfriend_base_domain }}`)"
       traefik.http.routers.vwsfriend.entrypoints: websecure
       traefik.http.routers.vwsfriend.tls.options: modern@file
-      traefik.http.services.vwsfriend.loadbalancer.server.port: "{{ homestack_vwsfriend_port }}"
     networks:
       - traefik
       - vwsfriend
+    restart: unless-stopped
+    user: "{{ homestack_uid }}:{{ homestack_gid }}"
     volumes:
       - "{{ homestack_vwsfriend_base_path }}/config:/config"
-    environment:
-      VWSFRIEND_USERNAME: "{{ homestack_vwsfriend_username }}"
-      VWSFRIEND_PASSWORD: "{{ homestack_vwsfriend_password }}"
-      VWSFRIEND_PORT: "{{ homestack_vwsfriend_port }}"
-      WECONNECT_USER: "{{ homestack_vwsfriend_weconnect_user }}"
-      WECONNECT_PASSWORD: "{{ homestack_vwsfriend_weconnect_password }}"
-      WECONNECT_SPIN: "{{ homestack_vwsfriend_weconnect_spin }}"
-      WECONNECT_INTERVAL: "{{ homestack_vwsfriend_weconnect_interval }}"
-      DATABASE_URL: "postgresql://{{ homestack_vwsfriend_db_user }}:{{ homestack_vwsfriend_db_password }}@vwsfriend-db:5432/{{ homestack_vwsfriend_db_name }}"
-      ADDITIONAL_PARAMETERS: "--with-database --with-abrp {{ homestack_vwsfriend_additional_parameters }}"
-    restart: unless-stopped
 
   vwsfriend-db:
-    image: postgres:13
-    networks:
-      - vwsfriend
-    volumes:
-      - "{{ homestack_vwsfriend_base_path }}/db:/var/lib/postgresql/data"
-    user: postgres
+    container_name: vwsfriend-db
     environment:
       POSTGRES_USER: "{{ homestack_vwsfriend_db_user }}"
       POSTGRES_PASSWORD: "{{ homestack_vwsfriend_db_password }}"
       POSTGRES_DB: "{{ homestack_vwsfriend_db_name }}"
       TZ: "UTC"
       PGTZ: "UTC"
-    command: -p {{ homestack_vwsfriend_db_port }}
-    restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -p {{ homestack_vwsfriend_db_port }} --username={{ homestack_vwsfriend_db_user }} --dbname={{ homestack_vwsfriend_db_name }}"]
+      test: ["CMD-SHELL", "pg_isready -p 5432 --username={{ homestack_vwsfriend_db_user }} --dbname={{ homestack_vwsfriend_db_name }}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    image: postgres:{{ homestack_vwsfriend_postgres_image_version }}
+    networks:
+      - vwsfriend
+    user: "{{ homestack_uid }}:{{ homestack_gid }}"
+    restart: unless-stopped
+    volumes:
+      - "{{ homestack_vwsfriend_base_path }}/db:/var/lib/postgresql/data"
 
   grafana:
-    image: tillsteinbach/vwsfriend-grafana:{{ homestack_vwsfriend_grafana_version }}
-    container_name: grafana
-    labels:
-      traefik.enable: true
-      traefik.http.routers.grafana.rule: "Host(`vw-grafana.{{ homestack_vwsfriend_base_domain }}`)"
-      traefik.http.routers.grafana.entrypoints: websecure
-      traefik.http.routers.grafana.tls.options: modern@file
-      traefik.docker.network: traefik-net
-    networks:
-      - traefik
-      - vwsfriend
-    volumes:
-      - "{{ homestack_vwsfriend_base_path }}/grafana:/var/lib/grafana"
+    container_name: vwsfriend-grafana
     environment:
       GF_SECURITY_ADMIN_USER: "{{ homestack_vwsfriend_username }}"
       GF_SECURITY_ADMIN_PASSWORD: "{{ homestack_vwsfriend_password }}"
+      GF_LOG_LEVEL: info
+      GF_LOG_MODE: console
       DB_USER: "{{ homestack_vwsfriend_db_user }}"
       DB_PASSWORD: "{{ homestack_vwsfriend_db_password }}"
       DB_HOSTNAME: "vwsfriend-db"
@@ -83,14 +72,27 @@ services:
       VWSFRIEND_USERNAME: "{{ homestack_vwsfriend_username }}"
       VWSFRIEND_PASSWORD: "{{ homestack_vwsfriend_password }}"
       VWSFRIEND_HOSTNAME: "vwsfriend.{{ homestack_vwsfriend_base_domain }}"
-      VWSFRIEND_PORT: "{{ homestack_vwsfriend_port }}"
-    restart: unless-stopped
+      VWSFRIEND_PORT: 4000
     healthcheck:
       test: ["CMD", "wget", "-O", "/dev/null", "http://localhost:3000"]
       interval: 10s
       timeout: 15s
       retries: 10
       start_period: 30s 
+    image: tillsteinbach/vwsfriend-grafana:{{ homestack_vwsfriend_grafana_version }}
+    labels:
+      traefik.enable: true
+      traefik.http.routers.grafana.rule: "Host(`vwsfriend-grafana.{{ homestack_vwsfriend_base_domain }}`)"
+      traefik.http.routers.grafana.entrypoints: websecure
+      traefik.http.routers.grafana.tls.options: modern@file
+      traefik.docker.network: traefik-net
+    networks:
+      - traefik
+      - vwsfriend
+    restart: unless-stopped
+    user: "{{ homestack_uid }}:{{ homestack_gid }}"
+    volumes:
+      - "{{ homestack_vwsfriend_base_path }}/grafana:/var/lib/grafana"
 
 networks:
   traefik:
