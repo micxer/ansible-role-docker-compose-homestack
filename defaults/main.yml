@@ -65,24 +65,25 @@ homestack_ha_evcc_ntfy_uri: https://ntfy.sh/abcdefghijklmnopqrstuvwxyz012345
 homestack_ha_evcc_grid_costs: 0.30 # €/kWh
 homestack_ha_evcc_feedin_revenue: 0.082 # €/kWh
 
-# vwsfriend stack defaults
-homestack_vwsfriend_image_version: latest
-homestack_vwsfriend_port: 4000
-homestack_vwsfriend_hostname: vwsfriendbackend
-homestack_vwsfriend_base_path: ""
+# vwsfriend
+homestack_vwsfriend_active: true
+homestack_vwsfriend_base_domain: example.com
+
+# renovate: image=tillsteinbach/vwsfriend
+homestack_vwsfriend_image_version: 0.24.7
+# homestack_vwsfriend_base_path: ""  # must be set
 homestack_vwsfriend_username: admin
-homestack_vwsfriend_password: secret
-homestack_vwsfriend_weconnect_user: ""
-homestack_vwsfriend_weconnect_password: ""
-homestack_vwsfriend_weconnect_spin: ""
-homestack_vwsfriend_weconnect_interval: ""
-homestack_vwsfriend_db_user: admin
-homestack_vwsfriend_db_password: secret
+# homestack_vwsfriend_password: secret  # must be set
+# homestack_vwsfriend_weconnect_user: ""  # must be set
+# homestack_vwsfriend_weconnect_password: ""  # must be set
+# homestack_vwsfriend_weconnect_spin: ""  # must be set
+homestack_vwsfriend_weconnect_interval: 120
+homestack_vwsfriend_postgres_image_version: 13.21
+homestack_vwsfriend_db_user: vwsfriend
+# homestack_vwsfriend_db_password: secret  # must be set
 homestack_vwsfriend_db_name: vwsfriend
-homestack_vwsfriend_db_port: 5432
 homestack_vwsfriend_additional_parameters: ""
 homestack_vwsfriend_grafana_version: 0.24.7
-homestack_vwsfriend_grafana_port: 3000
 
 homestack_backup: true
 homestack_backup_script_path: /usr/local/bin
