@@ -47,3 +47,17 @@
     dest: "{{ homestack_backup_script_path }}/evcc_env_vars.sh"
     mode: "0700"
   when: homestack_ha_active
+
+- name: backup | Copy vwsfriend backup script env vars file
+  ansible.builtin.template:
+    src: "backup/vwsfriend_env_vars.sh.j2"
+    dest: "{{ homestack_backup_script_path }}/vwsfriend_env_vars.sh"
+    mode: "0700"
+  when: homestack_vwsfriend_active
+
+- name: backup | Copy vwsfriend backup script
+  ansible.builtin.copy:
+    src: "backup/vwsfriend_container_backup.sh"
+    dest: "{{ homestack_backup_script_path }}/vwsfriend_container_backup.sh"
+    mode: "0700"
+  when: homestack_vwsfriend_active

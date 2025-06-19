@@ -58,6 +58,9 @@ services:
 
   grafana:
     container_name: vwsfriend-grafana
+    depends_on:
+      vwsfriend-db:
+        condition: service_healthy
     environment:
       GF_SECURITY_ADMIN_USER: "{{ homestack_vwsfriend_username }}"
       GF_SECURITY_ADMIN_PASSWORD: "{{ homestack_vwsfriend_password }}"
