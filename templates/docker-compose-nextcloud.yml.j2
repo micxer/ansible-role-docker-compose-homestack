@@ -44,7 +44,7 @@ services:
       traefik.http.middlewares.nextcloud_redirect.redirectregex.permanent: true
       traefik.http.middlewares.nextcloud_redirect.redirectregex.regex: "https://(.*)/.well-known/(?:card|cal)dav"
       traefik.http.middlewares.nextcloud_redirect.redirectregex.replacement: "https://$${1}/remote.php/dav"
-      traefik.http.middlewares.nextcloud_sameorigin.header.customFrameOptionsValue: sameorigin
+      traefik.http.middlewares.nextcloud_sameorigin.headers.customFrameOptionsValue: sameorigin
       traefik.http.routers.nextcloud.rule: "Host(`nextcloud.{{ homestack_nextcloud_base_domain }}`)"
       traefik.http.routers.nextcloud.entrypoints: websecure
       traefik.http.routers.nextcloud.middlewares: nextcloud_redirect,nextcloud_sameorigin,default@file
