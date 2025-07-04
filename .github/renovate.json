@@ -5,14 +5,17 @@
     "renovate"
   ],
   "dependencyDashboard": true,
-  "extends": ["config:recommended", "config:best-practices"],
+  "extends": [
+    "config:recommended",
+    "config:best-practices"
+  ],
   "separateMultipleMajor": true,
   "customManagers": [
     {
       "customType": "regex",
       "datasourceTemplate": "docker",
-      "fileMatch": [
-        "main\\.yml"
+      "managerFilePatterns": [
+        "/main\\.yml/"
       ],
       "matchStrings": [
         "#\\s?renovate: image=(?<depName>.*?)\n.+:\\s?(?<currentValue>[\\w+\\.\\-]*)"
@@ -21,8 +24,12 @@
   ],
   "packageRules": [
     {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["nextcloud"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "nextcloud"
+      ],
       "rangeStrategy": "bump"
     }
   ]
