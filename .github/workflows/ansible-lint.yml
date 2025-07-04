@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Lint Ansible Playbook
-        uses: ansible/ansible-lint@c16f018b1bdfdea6717f4b5b1b141a78b86021cd # v25
+        uses: ansible/ansible-lint@06f616d6e86e9ce4c74393318d1cbb2d016af413 # v25
 
       - name: Upload Sarif file
         uses: github/codeql-action/upload-sarif@28deaeda66b76a05916b6923827895f2b14ab387 # v3
