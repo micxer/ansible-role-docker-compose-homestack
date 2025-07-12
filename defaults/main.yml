@@ -4,7 +4,7 @@ homestack_output_path: "~"
 
 # traefik
 # renovate: image=traefik
-homestack_traefik_version: v3.4.3
+homestack_traefik_version: v3.4.4
 # renovate: image=ghcr.io/tarampampam/error-pages
 homestack_error_pages_version: 3.3
 homestack_error_pages_theme: app-down
