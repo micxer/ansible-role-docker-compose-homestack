@@ -49,7 +49,7 @@ homestack_ha_active: true
 homestack_ha_base_domain: example.com
 
 # renovate: image=eclipse-mosquitto
-homestack_ha_mosquitto_image_version: 2.0.21
+homestack_ha_mosquitto_image_version: 2.0.22
 # homestack_ha_mosquitto_base_path: ""  # must be set
 homestack_ha_mosquitto_users: {}
 # renovate: image=evcc/evcc
