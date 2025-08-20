@@ -137,7 +137,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
             ;;
         *)
             echo "Usage: $0 {before|success|failure|restore}"
-            exit 1
+            exit 0
             ;;
     esac
 fi
