@@ -11,15 +11,15 @@
       mode: "0750"
 
 - name: monitoring | Copy prometheus specific files to their respective directories
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: "{{ item }}"
-    dest: "{{ homestack_monitoring_prometheus_base_path }}/{{ item | basename }}"
+    dest: "{{ homestack_monitoring_prometheus_base_path }}/{{ item | basename | regex_replace('\\.j2$', '') }}"
     owner: "{{ homestack_uid }}"
     group: "{{ homestack_gid }}"
     mode: "0600"
     backup: true
-  with_fileglob:
-    - monitoring/prometheus.yml
+  with_items:
+    - monitoring/prometheus.yml.j2
 
 - name: monitoring | Ensure grafana directories exist
   ansible.builtin.file:
