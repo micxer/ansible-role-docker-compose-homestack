@@ -32,8 +32,8 @@ scrape_configs:
     scrape_interval: 5s
     scheme: https
     basic_auth:
-      username: 'prometheus'
-      password: 'CO&g0HH$ic*CM@8Gta&A'
+      username: "{{ homestack_monitoring_prometheus_basic_auth_user }}"
+      password: "{{ homestack_monitoring_prometheus_basic_auth_password }}"
     static_configs:
     - targets: ['micxer.de:9100']
 
@@ -41,8 +41,8 @@ scrape_configs:
     scrape_interval: 5s
     scheme: https
     basic_auth:
-      username: 'prometheus'
-      password: 'CO&g0HH$ic*CM@8Gta&A'
+      username: "{{ homestack_monitoring_prometheus_basic_auth_user }}"
+      password: "{{ homestack_monitoring_prometheus_basic_auth_password }}"
     static_configs:
     - targets: ['micxer.de:9636']
 
@@ -57,8 +57,8 @@ scrape_configs:
   #   scrape_interval: 5s
   #   scheme: http
   #   basic_auth:
-  #     username: 'prometheus'
-  #     password: 'CO&g0HH$ic*CM@8Gta&A'
+  #   username: "{{ homestack_monitoring_prometheus_basic_auth_user }}"
+  #   password: "{{ homestack_monitoring_prometheus_basic_auth_password }}"
   #   static_configs:
   #   - targets:
   #     - 'krikkit:9100'
