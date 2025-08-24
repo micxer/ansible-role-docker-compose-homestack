@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  echo "This script must be sourced, not executed directly."
+  exit 1
+fi
+
+readonly VWSFRIEND_DIR="{{ homestack_vwsfriend_base_path }}"
+readonly DB_USER="{{ homestack_vwsfriend_db_user }}"
+readonly DB_NAME="{{ homestack_vwsfriend_db_name }}"
+readonly DB_PASSWORD="{{ homestack_vwsfriend_db_password }}"
+readonly ZPOOL_VWSFRIEND="{{ zfs_pools[0].name }}"
+
+readonly NTFY_TOPIC="{{ autorestic_ntfy_topic }}"
