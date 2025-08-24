@@ -19,7 +19,7 @@
     mode: "0600"
     backup: true
   with_items:
-    - monitoring/prometheus.yml.j2
+    - prometheus/prometheus.yml.j2
 
 - name: monitoring | Ensure grafana directories exist
   ansible.builtin.file:
