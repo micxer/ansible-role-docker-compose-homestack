@@ -42,7 +42,7 @@ homestack_monitoring_prometheus_image_version: v2.55.1
 # homestack_monitoring_prometheus_basic_auth_user: ""  # must be set
 # homestack_monitoring_prometheus_basic_auth_password: ""  # must be set
 # renovate: image=grafana/grafana-oss
-homestack_monitoring_grafana_image_version: 11.6.5
+homestack_monitoring_grafana_image_version: 12.1.1
 # homestack_monitoring_grafana_admin_password: ""  # must be set
 # homestack_monitoring_grafana_base_path: ""  # must be set
 
