@@ -24,8 +24,8 @@
     {
       "customType": "regex",
       "datasourceTemplate": "docker",
-      "fileMatch": [
-        "templates/docker-compose-.*\\.yml\\.j2$"
+      "managerFilePatterns": [
+        "/templates/docker-compose-.*\\.yml\\.j2$/"
       ],
       "matchStrings": [
         "#\\s*renovate:\\s*(?:versioning=(?<versioning>\\S+))?\\s*\\n\\s*image:\\s*(?<depName>[^:]+):(?<currentValue>[^\\s]+)"
@@ -43,7 +43,10 @@
       "rangeStrategy": "bump"
     },
     {
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "matchCurrentVersion": "!/^0/",
       "automerge": true
     }
