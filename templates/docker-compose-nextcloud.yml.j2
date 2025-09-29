@@ -158,7 +158,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    image: mariadb:11.4  # renovate: datasource=docker depName=mariadb versioning=semver
+    # renovate: versioning=semver
+    image: mariadb:11.4
     networks:
       - nextcloud
     restart: unless-stopped
@@ -173,7 +174,8 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-    image: redis:7.4  # renovate: datasource=docker depName=redis versioning=semver
+    # renovate: versioning=semver
+    image: redis:7.4
     networks:
       - nextcloud
     restart: unless-stopped

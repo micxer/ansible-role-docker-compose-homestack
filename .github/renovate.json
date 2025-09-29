@@ -20,6 +20,16 @@
       "matchStrings": [
         "#\\s?renovate: image=(?<depName>.*?)\n.+:\\s?(?<currentValue>[\\w+\\.\\-]*)"
       ]
+    },
+    {
+      "customType": "regex",
+      "datasourceTemplate": "docker",
+      "fileMatch": [
+        "templates/docker-compose-.*\\.yml\\.j2$"
+      ],
+      "matchStrings": [
+        "#\\s*renovate:\\s*(?:versioning=(?<versioning>\\S+))?\\s*\\n\\s*image:\\s*(?<depName>[^:]+):(?<currentValue>[^\\s]+)"
+      ]
     }
   ],
   "packageRules": [
