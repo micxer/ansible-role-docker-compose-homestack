@@ -34,6 +34,10 @@
   ],
   "packageRules": [
     {
+      "matchDatasources": ["docker"],
+      "pinDigests": false
+    },
+    {
       "matchDatasources": [
         "docker"
       ],
@@ -49,11 +53,6 @@
       ],
       "matchCurrentVersion": "!/^0/",
       "automerge": true
-    },
-    {
-      "matchManagers": ["regex"],
-      "matchFileNames": ["defaults/main.yml"],
-      "pinDigests": false
     }
   ]
 }
