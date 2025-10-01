@@ -51,8 +51,12 @@
       "automerge": true
     },
     {
-      "matchManagers": ["regex"],
-      "matchFileNames": ["defaults/main.yml"],
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchFileNames": [
+        "defaults/main.yml"
+      ],
       "pinDigests": false
     }
   ]
