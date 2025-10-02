@@ -32,6 +32,10 @@ homestack_nextcloud_image_version: 31.0.9-apache
 # homestack_nextcloud_smtp_password: ""  # must be set
 homestack_nextcloud_base_domain: example.com
 # homestack_nextcloud_mysql_path: ""  # must be set
+# renovate: image=mariadb
+homestack_nextcloud_mariadb_version: 11.8.3
+# renovate: image=redis
+homestack_nextcloud_redis_version: 7.4.5
 
 # homestack_monitoring
 homestack_monitoring_active: true

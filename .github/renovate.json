@@ -15,28 +15,14 @@
       "customType": "regex",
       "datasourceTemplate": "docker",
       "managerFilePatterns": [
-        "/main\\.yml/"
+        "/defaults/main\\.yml$/"
       ],
       "matchStrings": [
         "#\\s?renovate: image=(?<depName>.*?)\n.+:\\s?(?<currentValue>[^\\s]+)"
       ]
-    },
-    {
-      "customType": "regex",
-      "datasourceTemplate": "docker",
-      "managerFilePatterns": [
-        "/templates/docker-compose-.*\\.yml\\.j2$/"
-      ],
-      "matchStrings": [
-        "#\\s*renovate:\\s*(?:versioning=(?<versioning>\\S+))?\\s*\\n\\s*image:\\s*(?<depName>[^:]+):(?<currentValue>[^\\s]+)"
-      ]
     }
   ],
   "packageRules": [
-    {
-      "matchDatasources": ["docker"],
-      "pinDigests": false
-    },
     {
       "matchDatasources": [
         "docker"

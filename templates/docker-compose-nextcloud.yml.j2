@@ -158,8 +158,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    # renovate: versioning=semver
-    image: mariadb:11.4
+  image: mariadb:{{ homestack_nextcloud_mariadb_version }}
     networks:
       - nextcloud
     restart: unless-stopped
@@ -174,8 +173,7 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-    # renovate: versioning=semver
-    image: redis:7.4
+  image: redis:{{ homestack_nextcloud_redis_version }}
     networks:
       - nextcloud
     restart: unless-stopped
