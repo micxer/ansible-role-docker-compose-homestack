@@ -3,7 +3,7 @@ network:
   host: "evcc.{{ homestack_ha_base_domain }}"
   port: 7070
 
-log: debug
+log: info
 levels:
   cache: error
 
@@ -14,20 +14,20 @@ interval: 30s # control cycle interval
 
 meters:
 - type: template
-  template: kostal-plenticore 
-  id: 71  
-  host: sol  
-  port: 1502  
-  usage: pv  
-  modbus: tcpip  
+  template: kostal-plenticore
+  id: 71
+  host: sol
+  port: 1502
+  usage: pv
+  modbus: tcpip
   name: plenticore
 - type: template
-  template: kostal-plenticore 
-  id: 71  
-  host: sol  
-  port: 1502  
-  usage: battery  
-  modbus: tcpip  
+  template: kostal-plenticore
+  id: 71
+  host: sol
+  port: 1502
+  usage: battery
+  modbus: tcpip
   name: byd
 
 - type: template
@@ -41,24 +41,24 @@ meters:
 
 chargers:
 - type: template
-  template: tinkerforge-warp3-smart
+  template: tinkerforge-warp3
   host: tls://mosquitto.{{ homestack_ha_base_domain }}
-  port: 8883  
-  topic: warp  
-  timeout: 30s  
+  port: 8883
+  topic: warp
+  timeout: 30s
   name: warp3
   user: "{{ homestack_ha_evcc_mqtt_user }}"
   password: "{{ homestack_ha_evcc_mqtt_password }}"
 
 vehicles:
 - type: template
-  template: vw 
+  template: vw
   user: "{{ homestack_ha_evcc_vw_user }}"
   password: "{{ homestack_ha_evcc_vw_password }}"
   vin: "{{ homestack_ha_evcc_vw_vin }}"
-  title: ID.3  
-  capacity: 58  
-  timeout: 10s  
+  title: ID.3
+  capacity: 58
+  timeout: 10s
   name: id3
   cache: 5m
 
