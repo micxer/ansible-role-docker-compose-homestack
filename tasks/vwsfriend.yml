@@ -10,7 +10,7 @@
     - name: config
       mode: "0750"
     - name: db
-      mode: "0750"
+      mode: "0700"
     - name: grafana
       mode: "0750"
 
