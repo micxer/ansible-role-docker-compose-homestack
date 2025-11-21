@@ -24,7 +24,7 @@
 
 - name: nextcloud | Create version tracking files if they don't exist
   ansible.builtin.file:
-    path: "{{ item.item }}"
+    path: "{{ homestack_nextcloud_base_path }}/{{ item.item }}"
     state: touch
     owner: "{{ homestack_nextcloud_user }}"
     group: "{{ homestack_nextcloud_group }}"
