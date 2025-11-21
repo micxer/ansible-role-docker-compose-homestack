@@ -57,6 +57,8 @@ services:
     restart: unless-stopped
     user: "{{ homestack_nextcloud_uid }}:{{ homestack_nextcloud_gid }}"
     volumes:
+      - "{{ homestack_nextcloud_base_path }}/version.php:/var/www/html/version.php"
+      - "{{ homestack_nextcloud_base_path }}/nextcloud-init-sync.lock:/var/www/html/nextcloud-init-sync.lock"
       - "{{ homestack_nextcloud_base_path }}/custom_apps:/var/www/html/custom_apps"
       - "{{ homestack_nextcloud_base_path }}/data:/var/www/html/data"
       - "{{ homestack_nextcloud_base_path }}/config:/var/www/html/config"
