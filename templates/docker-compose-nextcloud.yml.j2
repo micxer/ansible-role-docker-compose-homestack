@@ -158,7 +158,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  image: mariadb:{{ homestack_nextcloud_mariadb_version }}
+    image: mariadb:{{ homestack_nextcloud_mariadb_version }}
     networks:
       - nextcloud
     restart: unless-stopped
@@ -173,7 +173,7 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-  image: redis:{{ homestack_nextcloud_redis_version }}
+    image: redis:{{ homestack_nextcloud_redis_version }}
     networks:
       - nextcloud
     restart: unless-stopped
