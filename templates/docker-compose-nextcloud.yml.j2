@@ -57,11 +57,10 @@ services:
     restart: unless-stopped
     user: "{{ homestack_nextcloud_uid }}:{{ homestack_nextcloud_gid }}"
     volumes:
-      - "{{ homestack_nextcloud_base_path }}/version.php:/var/www/html/version.php"
-      - "{{ homestack_nextcloud_base_path }}/nextcloud-init-sync.lock:/var/www/html/nextcloud-init-sync.lock"
+      - "{{ homestack_nextcloud_base_path }}/html:/var/www/html"
       - "{{ homestack_nextcloud_base_path }}/custom_apps:/var/www/html/custom_apps"
-      - "{{ homestack_nextcloud_base_path }}/data:/var/www/html/data"
       - "{{ homestack_nextcloud_base_path }}/config:/var/www/html/config"
+      - "{{ homestack_nextcloud_base_path }}/data:/var/www/html/data"
       - "{{ homestack_nextcloud_base_path }}/cron.sh:/cron.sh:ro"
       - "{{ homestack_nextcloud_base_path }}/remoteip.conf:/etc/apache2/conf-available/remoteip.conf:ro"
       - "{{ homestack_nextcloud_base_path }}/redis-session.ini:/usr/local/etc/php/conf.d/redis-session.ini"
@@ -86,9 +85,8 @@ services:
       - nextcloud
     restart: unless-stopped
     user: "{{ homestack_nextcloud_uid }}:{{ homestack_nextcloud_gid }}"
-    volumes:
-      - "{{ homestack_nextcloud_base_path }}/custom_apps:/var/www/html/custom_apps"
-      - "{{ homestack_nextcloud_base_path }}/config:/var/www/html/config"
+    volumes_from:
+      - nextcloud:ro
   cron:
     container_name: nc-cron
     depends_on:
