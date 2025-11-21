@@ -4,7 +4,7 @@ services:
   forgejo:
     container_name: forgejo
     image: codeberg.org/forgejo/forgejo:{{ homestack_git_forgejo_image_version }}
-    user: "{{ homestack_git_uid }}:{{ homestack_git_gid }}"
+    user: "{{ homestack_uid }}:{{ homestack_gid }}"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/healthz"]
       interval: 30s

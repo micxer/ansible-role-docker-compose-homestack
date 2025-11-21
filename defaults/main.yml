@@ -102,5 +102,3 @@ homestack_git_ssh_port: 2222  # External SSH port for git operations
 # renovate: image=codeberg.org/forgejo/forgejo
 homestack_git_forgejo_image_version: 11-rootless
 # homestack_git_base_path: ""  # must be set
-homestack_git_uid: "1000"
-homestack_git_gid: "1000"
