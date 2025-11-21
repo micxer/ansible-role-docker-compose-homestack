@@ -7,32 +7,14 @@
     group: "{{ homestack_nextcloud_group }}"
     mode: "{{ item.mode }}"
   with_items:
+    - name: html
+      mode: "0750"
     - name: custom_apps
       mode: "0750"
     - name: data
       mode: "0770"
     - name: config
       mode: "0750"
-
-- name: nextcloud | Check if version tracking files exist
-  ansible.builtin.stat:
-    path: "{{ homestack_nextcloud_base_path }}/{{ item }}"
-  register: nextcloud_version_files
-  with_items:
-    - version.php
-    - nextcloud-init-sync.lock
-
-- name: nextcloud | Create version tracking files if they don't exist
-  ansible.builtin.file:
-    path: "{{ homestack_nextcloud_base_path }}/{{ item.item }}"
-    state: touch
-    owner: "{{ homestack_nextcloud_user }}"
-    group: "{{ homestack_nextcloud_group }}"
-    mode: "0644"
-  when: not item.stat.exists
-  with_items: "{{ nextcloud_version_files.results }}"
-  loop_control:
-    label: "{{ item.item }}"
 
 - name: nextcloud | Copy nextcloud specific files to their respective directories
   ansible.builtin.copy:
