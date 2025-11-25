@@ -1,0 +1,127 @@
+{{ ansible_managed | comment }}
+
+[server]
+APP_NAME = Forgejo
+PROTOCOL = http
+DOMAIN = {{ homestack_git_base_domain }}
+HTTP_PORT = 3000
+ROOT_URL = {{ homestack_git_root_url }}
+SSH_DOMAIN = {{ homestack_git_ssh_domain }}
+SSH_PORT = {{ homestack_git_ssh_port }}
+SSH_LISTEN_PORT = 2222
+START_SSH_SERVER = true
+OFFLINE_MODE = false
+DISABLE_SSH = false
+LANDING_PAGE = explore
+LFS_START_SERVER = true
+LFS_JWT_SECRET = {{ homestack_git_secret_key }}
+
+[database]
+DB_TYPE = {{ homestack_git_db_type }}
+{% if homestack_git_db_type == 'sqlite3' %}
+PATH = {{ homestack_git_db_path }}
+{% else %}
+HOST = {{ homestack_git_db_host | default('127.0.0.1:3306') }}
+NAME = {{ homestack_git_db_name | default('forgejo') }}
+USER = {{ homestack_git_db_user | default('forgejo') }}
+PASSWD = {{ homestack_git_db_password | default('') }}
+{% endif %}
+LOG_SQL = false
+
+[security]
+INSTALL_LOCK = true
+SECRET_KEY = {{ homestack_git_secret_key }}
+INTERNAL_TOKEN = {{ homestack_git_internal_token }}
+PASSWORD_HASH_ALGO = pbkdf2
+MIN_PASSWORD_LENGTH = 8
+PASSWORD_COMPLEXITY = lower,upper,digit
+PASSWORD_CHECK_PWN = true
+
+[service]
+DISABLE_REGISTRATION = {{ homestack_git_disable_registration | lower }}
+REQUIRE_SIGNIN_VIEW = {{ homestack_git_require_signin_view | lower }}
+REGISTER_EMAIL_CONFIRM = false
+ENABLE_NOTIFY_MAIL = true
+DEFAULT_KEEP_EMAIL_PRIVATE = true
+DEFAULT_ALLOW_CREATE_ORGANIZATION = true
+DEFAULT_ENABLE_TIMETRACKING = true
+NO_REPLY_ADDRESS = noreply.{{ homestack_git_base_domain }}
+
+[mailer]
+ENABLED = {{ homestack_git_mailer_enabled | lower }}
+{% if homestack_git_mailer_enabled %}
+PROTOCOL = smtp
+SMTP_ADDR = {{ homestack_git_mailer_host }}
+SMTP_PORT = 587
+FROM = {{ homestack_git_mailer_from }}
+USER = {{ homestack_git_mailer_user | default('') }}
+PASSWD = {{ homestack_git_mailer_password | default('') }}
+MAILER_TYPE = smtp
+{% endif %}
+
+[session]
+PROVIDER = file
+PROVIDER_CONFIG = data/sessions
+COOKIE_SECURE = true
+COOKIE_NAME = i_like_forgejo
+SAME_SITE = lax
+SESSION_LIFE_TIME = 86400
+
+[log]
+MODE = console,file
+LEVEL = Info
+ROOT_PATH = /var/lib/gitea/log
+ACCESS = file
+
+[log.console]
+LEVEL = Warn
+
+[log.file]
+LEVEL = Info
+LOG_ROTATE = true
+MAX_SIZE_SHIFT = 28
+DAILY_ROTATE = true
+MAX_DAYS = 7
+
+[repository]
+ROOT = /var/lib/gitea/data/gitea-repositories
+DEFAULT_BRANCH = main
+DEFAULT_PRIVATE = last
+ENABLE_PUSH_CREATE_USER = true
+ENABLE_PUSH_CREATE_ORG = true
+
+[repository.upload]
+ENABLED = true
+MAX_SIZE = 50
+MAX_FILES = 10
+
+[repository.signing]
+DEFAULT_TRUST_MODEL = committer
+
+[ui]
+DEFAULT_THEME = forgejo-auto
+THEMES = forgejo-auto,forgejo-light,forgejo-dark
+
+[webhook]
+ALLOWED_HOST_LIST = *
+SKIP_TLS_VERIFY = false
+
+[oauth2]
+ENABLE = true
+JWT_SECRET = {{ homestack_git_secret_key }}
+
+[admin]
+DISABLE_REGULAR_ORG_CREATION = false
+
+[openid]
+ENABLE_OPENID_SIGNIN = false
+ENABLE_OPENID_SIGNUP = false
+
+[cron]
+ENABLED = true
+
+[cron.update_checker]
+ENABLED = false
+
+[actions]
+ENABLED = false
