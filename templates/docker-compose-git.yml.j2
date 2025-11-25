@@ -25,7 +25,7 @@ services:
       traefik.tcp.routers.forgejo-ssh.rule: "HostSNI(`*`)"
       traefik.tcp.routers.forgejo-ssh.entrypoints: forgejo-git
       traefik.tcp.routers.forgejo-ssh.service: forgejo-ssh
-      traefik.tcp.services.forgejo-ssh.loadbalancer.server.port: 22
+      traefik.tcp.services.forgejo-ssh.loadbalancer.server.port: 2222
     restart: unless-stopped
     networks:
       - traefik
