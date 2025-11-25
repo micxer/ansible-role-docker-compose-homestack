@@ -102,3 +102,26 @@ homestack_git_ssh_port: 2222  # External SSH port for git operations
 # renovate: image=codeberg.org/forgejo/forgejo
 homestack_git_forgejo_image_version: 11-rootless
 # homestack_git_base_path: ""  # must be set
+
+# Forgejo app.ini configuration
+homestack_git_root_url: "https://git.{{ homestack_git_base_domain }}/"
+homestack_git_ssh_domain: "git.{{ homestack_git_base_domain }}"
+
+# Database (default to SQLite for simplicity)
+homestack_git_db_type: sqlite3
+homestack_git_db_path: /var/lib/gitea/data/forgejo.db
+
+# Security (MUST be set by user)
+# homestack_git_secret_key: ""  # Generate with: openssl rand -hex 32
+# homestack_git_internal_token: ""  # Generate with: openssl rand -hex 105
+
+# Service settings
+homestack_git_disable_registration: true
+homestack_git_require_signin_view: false
+
+# Mailer (optional)
+homestack_git_mailer_enabled: false
+# homestack_git_mailer_host: ""
+# homestack_git_mailer_from: ""
+# homestack_git_mailer_user: ""
+# homestack_git_mailer_password: ""
