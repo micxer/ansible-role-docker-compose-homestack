@@ -7,6 +7,23 @@
     group: "{{ homestack_gid }}"
     mode: "0750"
 
+- name: git | Ensure forgejo custom/conf directory exists
+  ansible.builtin.file:
+    path: "{{ homestack_git_base_path }}/custom/conf"
+    state: directory
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0750"
+
+- name: git | Render forgejo app.ini configuration
+  ansible.builtin.template:
+    src: "forgejo-app.ini.j2"
+    dest: "{{ homestack_git_base_path }}/custom/conf/app.ini"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true
+
 - name: git | Write docker-compose file
   ansible.builtin.template:
     src: "docker-compose-git.yml.j2"
