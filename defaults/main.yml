@@ -76,7 +76,7 @@ homestack_vwsfriend_active: true
 homestack_vwsfriend_base_domain: example.com
 
 # renovate: image=tillsteinbach/vwsfriend
-homestack_vwsfriend_image_version: 0.24.9
+homestack_vwsfriend_image_version: 0.24.10
 # homestack_vwsfriend_base_path: ""  # must be set
 homestack_vwsfriend_username: admin
 # homestack_vwsfriend_password: secret  # must be set
