@@ -41,7 +41,7 @@ homestack_nextcloud_redis_version: 7.4.7
 homestack_monitoring_active: true
 homestack_monitoring_base_domain: example.com
 # renovate: image=prom/prometheus
-homestack_monitoring_prometheus_image_version: v3.8.1
+homestack_monitoring_prometheus_image_version: v3.9.0
 # homestack_monitoring_prometheus_base_path: ""  # must be set
 # homestack_monitoring_prometheus_basic_auth_user: ""  # must be set
 # homestack_monitoring_prometheus_basic_auth_password: ""  # must be set
