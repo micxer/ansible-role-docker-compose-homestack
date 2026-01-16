@@ -110,6 +110,11 @@ homestack_git_ssh_domain: "git.{{ homestack_git_base_domain }}"
 # Database (default to SQLite for simplicity)
 homestack_git_db_type: sqlite3
 homestack_git_db_path: /var/lib/gitea/data/forgejo.db
+# For MySQL/PostgreSQL, set homestack_git_db_type to 'mysql' or 'postgres' and configure:
+# homestack_git_db_host: "127.0.0.1:3306"  # Database host:port
+# homestack_git_db_name: "forgejo"  # Database name
+# homestack_git_db_user: "forgejo"  # Database user
+# homestack_git_db_password: ""  # Database password
 
 # Security (MUST be set by user)
 # homestack_git_secret_key: ""  # REQUIRED: Encryption key for cookies and tokens. Generate with: openssl rand -hex 32
