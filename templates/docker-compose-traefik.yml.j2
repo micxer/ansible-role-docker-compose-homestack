@@ -41,7 +41,9 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 2222:2222
+{% if homestack_git_active | default(false) %}
+      - {{ homestack_git_ssh_port | default(2222) }}:{{ homestack_git_ssh_port | default(2222) }}  # Forgejo SSH git operations
+{% endif %}
       - 8883:8883
     restart: unless-stopped
     volumes:

@@ -7,6 +7,32 @@
     group: "{{ homestack_gid }}"
     mode: "0755"
 
+- name: Ensure traefik config directory exists
+  ansible.builtin.file:
+    path: "{{ homestack_traefik_base_path }}"
+    state: directory
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0755"
+
+- name: Write traefik static configuration
+  ansible.builtin.template:
+    src: "traefik.yml.j2"
+    dest: "{{ homestack_traefik_base_path }}/traefik.yml"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true
+
+- name: Write traefik dynamic configuration
+  ansible.builtin.template:
+    src: "config.yml.j2"
+    dest: "{{ homestack_traefik_base_path }}/config.yml"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true
+
 - name: Write traeffik docker-compose file
   ansible.builtin.template:
     src: "docker-compose-traefik.yml.j2"
