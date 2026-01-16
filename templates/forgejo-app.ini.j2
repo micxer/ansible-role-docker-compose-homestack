@@ -2,19 +2,22 @@
 
 [server]
 APP_NAME = Forgejo
+# Protocol for internal communication (http because Traefik handles TLS termination)
 PROTOCOL = http
 DOMAIN = {{ homestack_git_base_domain }}
 HTTP_PORT = 3000
 ROOT_URL = {{ homestack_git_root_url }}
 SSH_DOMAIN = {{ homestack_git_ssh_domain }}
+# SSH_PORT: Port displayed in git clone URLs (external port)
 SSH_PORT = {{ homestack_git_ssh_port }}
+# SSH_LISTEN_PORT: Internal container SSH port (rootless container constraint)
 SSH_LISTEN_PORT = 2222
 START_SSH_SERVER = true
 OFFLINE_MODE = false
 DISABLE_SSH = false
 LANDING_PAGE = explore
 LFS_START_SERVER = true
-LFS_JWT_SECRET = {{ homestack_git_secret_key }}
+LFS_JWT_SECRET = {{ homestack_git_lfs_jwt_secret | default(homestack_git_secret_key) }}
 
 [database]
 DB_TYPE = {{ homestack_git_db_type }}
@@ -52,7 +55,7 @@ ENABLED = {{ homestack_git_mailer_enabled | lower }}
 {% if homestack_git_mailer_enabled %}
 PROTOCOL = smtp
 SMTP_ADDR = {{ homestack_git_mailer_host }}
-SMTP_PORT = 587
+SMTP_PORT = {{ homestack_git_mailer_port }}
 FROM = {{ homestack_git_mailer_from }}
 USER = {{ homestack_git_mailer_user | default('') }}
 PASSWD = {{ homestack_git_mailer_password | default('') }}
@@ -63,7 +66,7 @@ MAILER_TYPE = smtp
 PROVIDER = file
 PROVIDER_CONFIG = data/sessions
 COOKIE_SECURE = true
-COOKIE_NAME = i_like_forgejo
+COOKIE_NAME = i_like_forgejo  # Cookie name for session management
 SAME_SITE = lax
 SESSION_LIFE_TIME = 86400
 
@@ -79,7 +82,7 @@ LEVEL = Warn
 [log.file]
 LEVEL = Info
 LOG_ROTATE = true
-MAX_SIZE_SHIFT = 28
+MAX_SIZE_SHIFT = 28  # Log file size: 2^28 bytes = 256MB before rotation
 DAILY_ROTATE = true
 MAX_DAYS = 7
 
@@ -103,12 +106,12 @@ DEFAULT_THEME = forgejo-auto
 THEMES = forgejo-auto,forgejo-light,forgejo-dark
 
 [webhook]
-ALLOWED_HOST_LIST = *
+ALLOWED_HOST_LIST = {{ homestack_git_webhook_allowed_hosts }}
 SKIP_TLS_VERIFY = false
 
 [oauth2]
 ENABLE = true
-JWT_SECRET = {{ homestack_git_secret_key }}
+JWT_SECRET = {{ homestack_git_oauth2_jwt_secret | default(homestack_git_secret_key) }}
 
 [admin]
 DISABLE_REGULAR_ORG_CREATION = false

@@ -97,11 +97,11 @@ homestack_backup_script_path: /usr/local/bin
 # git/forgejo
 homestack_git_active: true
 homestack_git_base_domain: example.com
-homestack_git_ssh_port: 2222  # External SSH port for git operations
+homestack_git_ssh_port: 2222  # External SSH port shown in git clone URLs (must match internal port 2222 in rootless container)
 
 # renovate: image=codeberg.org/forgejo/forgejo
 homestack_git_forgejo_image_version: 11-rootless
-# homestack_git_base_path: ""  # must be set
+# homestack_git_base_path: ""  # REQUIRED: Base directory for Forgejo data (repositories, config, logs). Example: /opt/forgejo
 
 # Forgejo app.ini configuration
 homestack_git_root_url: "https://git.{{ homestack_git_base_domain }}/"
@@ -112,16 +112,22 @@ homestack_git_db_type: sqlite3
 homestack_git_db_path: /var/lib/gitea/data/forgejo.db
 
 # Security (MUST be set by user)
-# homestack_git_secret_key: ""  # Generate with: openssl rand -hex 32
-# homestack_git_internal_token: ""  # Generate with: openssl rand -hex 105
+# homestack_git_secret_key: ""  # REQUIRED: Encryption key for cookies and tokens. Generate with: openssl rand -hex 32
+# homestack_git_internal_token: ""  # REQUIRED: Authentication token for internal API calls. Generate with: openssl rand -hex 105
+# homestack_git_lfs_jwt_secret: ""  # Optional: JWT secret for LFS (defaults to secret_key if not set)
+# homestack_git_oauth2_jwt_secret: ""  # Optional: JWT secret for OAuth2 (defaults to secret_key if not set)
 
 # Service settings
 homestack_git_disable_registration: true
 homestack_git_require_signin_view: false
 
+# Webhook settings
+homestack_git_webhook_allowed_hosts: external  # Restrict webhooks to external hosts (not internal networks). Use '*' to allow all (not recommended)
+
 # Mailer (optional)
 homestack_git_mailer_enabled: false
 # homestack_git_mailer_host: ""
+homestack_git_mailer_port: 587  # SMTP port (587 for STARTTLS, 465 for SMTPS, 25 for plain)
 # homestack_git_mailer_from: ""
 # homestack_git_mailer_user: ""
 # homestack_git_mailer_password: ""

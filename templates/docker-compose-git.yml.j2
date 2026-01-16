@@ -6,11 +6,18 @@ services:
     image: codeberg.org/forgejo/forgejo:{{ homestack_git_forgejo_image_version }}
     user: "{{ homestack_uid }}:{{ homestack_gid }}"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/healthz"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      test:
+        - CMD-SHELL
+        - >
+          HEALTH_RESPONSE=$$(/usr/bin/curl --insecure --silent --fail-with-body http://localhost:3000/api/healthz) &&
+          { echo "$$HEALTH_RESPONSE" | /bin/grep "\"status\": \"pass\"" &>/dev/null &&
+          ! echo "$$HEALTH_RESPONSE" | /bin/grep "\"status\": \"fail\"" &>/dev/null &&
+          ! echo "$$HEALTH_RESPONSE" | /bin/grep "\"status\": \"warn\"" &>/dev/null; }
+      start_period: 1m
+      start_interval: 3s
+      interval: 15s
+      timeout: 5s
+      retries: 3
     labels:
       traefik.enable: true
       traefik.docker.network: traefik-net

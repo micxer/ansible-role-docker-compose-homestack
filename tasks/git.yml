@@ -22,21 +22,16 @@
     fail_msg: "Mailer enabled but required variables not set (homestack_git_mailer_host, homestack_git_mailer_from)."
   when: homestack_git_mailer_enabled | default(false)
 
-- name: git | Ensure forgejo base directory exists
+- name: git | Ensure forgejo directories exist
   ansible.builtin.file:
-    path: "{{ homestack_git_base_path }}"
+    path: "{{ homestack_git_base_path }}/{{ item }}"
     state: directory
     owner: "{{ homestack_uid }}"
     group: "{{ homestack_gid }}"
     mode: "0750"
-
-- name: git | Ensure forgejo custom/conf directory exists
-  ansible.builtin.file:
-    path: "{{ homestack_git_base_path }}/custom/conf"
-    state: directory
-    owner: "{{ homestack_uid }}"
-    group: "{{ homestack_gid }}"
-    mode: "0750"
+  with_items:
+    - ""
+    - custom/conf
 
 - name: git | Render forgejo app.ini configuration
   ansible.builtin.template:
