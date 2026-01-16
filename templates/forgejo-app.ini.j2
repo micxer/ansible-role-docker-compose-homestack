@@ -8,9 +8,9 @@ DOMAIN = {{ homestack_git_base_domain }}
 HTTP_PORT = 3000
 ROOT_URL = {{ homestack_git_root_url }}
 SSH_DOMAIN = {{ homestack_git_ssh_domain }}
-# SSH_PORT: Port displayed in git clone URLs (external port)
+# SSH_PORT: Port displayed in git clone URLs (external port, Traefik routes to container)
 SSH_PORT = {{ homestack_git_ssh_port }}
-# SSH_LISTEN_PORT: Internal container SSH port (rootless container constraint)
+# SSH_LISTEN_PORT: Port where SSH server listens inside container (2222 for rootless)
 SSH_LISTEN_PORT = 2222
 START_SSH_SERVER = true
 OFFLINE_MODE = false

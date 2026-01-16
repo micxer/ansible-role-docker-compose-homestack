@@ -97,7 +97,7 @@ homestack_backup_script_path: /usr/local/bin
 # git/forgejo
 homestack_git_active: true
 homestack_git_base_domain: example.com
-homestack_git_ssh_port: 2222  # External SSH port shown in git clone URLs (must match internal port 2222 in rootless container)
+homestack_git_ssh_port: 2222  # External SSH port shown in git clone URLs (Traefik routes to internal container port 2222)
 
 # renovate: image=codeberg.org/forgejo/forgejo
 homestack_git_forgejo_image_version: 11-rootless
