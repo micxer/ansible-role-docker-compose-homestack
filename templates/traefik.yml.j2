@@ -1,0 +1,68 @@
+{{ ansible_managed | comment }}
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+entryPoints:
+  web:
+    address: :80
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: :443
+    http:
+      tls:
+        certresolver: hostingde
+        domains:
+          - main: {{ homestack_traefik_base_domain }}
+            sans:
+              - "*.{{ homestack_traefik_base_domain }}"
+  mqtts:
+    address: ":8883"
+{% if homestack_git_active | default(false) %}
+  forgejo-git:
+    address: ":{{ homestack_git_ssh_port | default(2222) }}"
+{% endif %}
+
+accesslog:
+  format: json
+  bufferingsize: 16
+  fields:
+    headers:
+      names:
+        User-Agent: keep
+        X-Request-ID: keep
+        StartUTC: drop
+
+ping: {}
+
+providers:
+  docker:
+    watch: true
+    network: traefik-net
+    endpoint: unix:///var/run/docker.sock
+    exposedByDefault: false
+  file:
+    filename: /etc/traefik/config.yml
+    watch: true
+
+api: {}
+
+log:
+  level: INFO
+
+certificatesResolvers:
+  hostingde:
+    acme:
+      email: "admin@{{ homestack_traefik_base_domain }}"
+      storage: /etc/traefik/acme.json
+      dnsChallenge:
+        provider: hostingde
+        resolvers:
+          - "134.0.30.178"
+          - "194.50.113.2"
+          - "194.126.196.2"
+          - "2a03:2902:3:1::2"

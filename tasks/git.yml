@@ -1,0 +1,52 @@
+---
+- name: git | Validate required variables
+  ansible.builtin.assert:
+    that:
+      - homestack_git_base_path is defined
+      - homestack_git_base_path | length > 0
+      - homestack_git_secret_key is defined
+      - homestack_git_secret_key | length > 0
+      - homestack_git_internal_token is defined
+      - homestack_git_internal_token | length > 0
+    fail_msg: >-
+      Required git variables not set. See defaults/main.yml for required configuration
+      (homestack_git_base_path, homestack_git_secret_key, homestack_git_internal_token).
+
+- name: git | Validate mailer configuration
+  ansible.builtin.assert:
+    that:
+      - homestack_git_mailer_host is defined
+      - homestack_git_mailer_host | length > 0
+      - homestack_git_mailer_from is defined
+      - homestack_git_mailer_from | length > 0
+    fail_msg: "Mailer enabled but required variables not set (homestack_git_mailer_host, homestack_git_mailer_from)."
+  when: homestack_git_mailer_enabled | default(false)
+
+- name: git | Ensure forgejo directories exist
+  ansible.builtin.file:
+    path: "{{ homestack_git_base_path }}/{{ item }}"
+    state: directory
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0750"
+  with_items:
+    - ""
+    - custom/conf
+
+- name: git | Render forgejo app.ini configuration
+  ansible.builtin.template:
+    src: "forgejo-app.ini.j2"
+    dest: "{{ homestack_git_base_path }}/custom/conf/app.ini"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true
+
+- name: git | Write docker-compose file
+  ansible.builtin.template:
+    src: "docker-compose-git.yml.j2"
+    dest: "{{ homestack_output_path }}/docker-compose-git.yml"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true

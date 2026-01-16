@@ -1,0 +1,47 @@
+{{ ansible_managed | comment }}
+---
+services:
+  forgejo:
+    container_name: forgejo
+    image: codeberg.org/forgejo/forgejo:{{ homestack_git_forgejo_image_version }}
+    user: "{{ homestack_uid }}:{{ homestack_gid }}"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >
+          HEALTH_RESPONSE=$$(/usr/bin/curl --insecure --silent --fail-with-body http://localhost:3000/api/healthz) &&
+          { echo "$$HEALTH_RESPONSE" | /bin/grep "\"status\": \"pass\"" &>/dev/null &&
+          ! echo "$$HEALTH_RESPONSE" | /bin/grep "\"status\": \"fail\"" &>/dev/null &&
+          ! echo "$$HEALTH_RESPONSE" | /bin/grep "\"status\": \"warn\"" &>/dev/null; }
+      start_period: 1m
+      start_interval: 3s
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik-net
+
+      # HTTP/HTTPS for web UI
+      traefik.http.routers.forgejo.rule: Host(`git.{{ homestack_git_base_domain }}`)
+      traefik.http.services.forgejo.loadbalancer.server.port: 3000
+      traefik.http.routers.forgejo.entrypoints: websecure
+      traefik.http.routers.forgejo.tls.options: modern@file
+
+      # TCP for SSH git operations
+      traefik.tcp.routers.forgejo-ssh.rule: "HostSNI(`*`)"
+      traefik.tcp.routers.forgejo-ssh.entrypoints: forgejo-git
+      traefik.tcp.routers.forgejo-ssh.service: forgejo-ssh
+      traefik.tcp.services.forgejo-ssh.loadbalancer.server.port: 2222
+    restart: unless-stopped
+    networks:
+      - traefik
+    volumes:
+      - {{ homestack_git_base_path }}:/var/lib/gitea
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+networks:
+  traefik:
+    name: traefik-net
+    external: true
