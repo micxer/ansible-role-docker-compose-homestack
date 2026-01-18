@@ -51,6 +51,27 @@ docker@memoryalpha ~/home-stack
  ✔ Container nextcloud  Started
  ```
 
+## Breaking Changes
+
+### Version 2.0.0 (PR #184 - Add Forgejo git stack)
+
+**Traefik configuration is now managed by Ansible**
+
+Starting with this version, Ansible automatically generates and manages the Traefik configuration files (`traefik.yml` and `config.yml`) in the `homestack_traefik_base_path` directory. Previously, users were responsible for manually creating and maintaining these files.
+
+**Impact:**
+
+- Any existing custom Traefik configuration files will be overwritten by the templated versions
+- Backups are automatically created before overwriting (using `backup: true`)
+- Users with custom Traefik settings beyond Docker labels will need to migrate their configurations
+
+**Migration steps:**
+
+1. Review your current `traefik.yml` and `config.yml` files before running this version
+2. Check the generated templates in `templates/traefik.yml.j2` and `templates/config.yml.j2`
+3. If you have custom settings, consider using the template variables or manually merging after deployment
+4. Backups will be stored with a timestamp suffix (e.g., `traefik.yml.2026-01-18@12:00:00~`)
+
 ## Variables
 
 ### Global variables
