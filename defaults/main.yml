@@ -100,7 +100,7 @@ homestack_git_base_domain: example.com
 homestack_git_ssh_port: 2222  # External SSH port shown in git clone URLs (Traefik routes to internal container port 2222)
 
 # renovate: image=codeberg.org/forgejo/forgejo
-homestack_git_forgejo_image_version: 11-rootless
+homestack_git_forgejo_image_version: 14-rootless
 # homestack_git_base_path: ""  # REQUIRED: Base directory for Forgejo data (repositories, config, logs). Example: /opt/forgejo
 
 # Forgejo app.ini configuration
