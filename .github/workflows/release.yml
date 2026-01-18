@@ -1,9 +1,8 @@
 name: Release
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published]
 
 env:
   GALAXY_USERNAME: micxer
@@ -23,13 +22,15 @@ jobs:
       - name: Install Ansible.
         run: pip3 install ansible-core
 
-      # Galaxy uses CamelCase username but GitHub is all lowercase
-      # This concatenates the versions together to work with
-      # And triggers an import on Galaxy
+      # Transforms repository name to Ansible Galaxy role naming convention
+      # Extracts repo name, removes "ansible-role-" prefix, converts hyphens to underscores
       - name: Trigger a new import on Galaxy.
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}
         run: |
-          REPO="$(echo ${{ github.repository }} | cut -d/ -f2)"
+          REPO="$(echo "$GITHUB_REPOSITORY" | cut -d/ -f2)"
           ROLE_NAME="$(echo "${REPO#ansible-role-}" | tr '-' '_')"
-          ansible-galaxy role import --token ${{ secrets.GALAXY_API_KEY }} \
-          --branch main --role-name $ROLE_NAME \
-          ${{ env.GALAXY_USERNAME }} $REPO
+          ansible-galaxy role import --token "$GALAXY_API_KEY" \
+          --branch main --role-name "$ROLE_NAME" \
+          ${{ env.GALAXY_USERNAME }} "$REPO"
