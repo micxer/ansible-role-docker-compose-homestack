@@ -26,13 +26,22 @@ categories:
     labels:
       - 'feature'
       - 'enhancement'
+    exclude-labels:
+      - 'breaking'
+      - 'breaking-change'
   - title: '🐛 Bug Fixes'
     labels:
       - 'fix'
       - 'bugfix'
       - 'bug'
+    exclude-labels:
+      - 'breaking'
+      - 'breaking-change'
   - title: '🧰 Maintenance'
     label: 'chore'
+    exclude-labels:
+      - 'breaking'
+      - 'breaking-change'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
 template: |
