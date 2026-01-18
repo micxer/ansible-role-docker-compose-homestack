@@ -131,3 +131,34 @@ Starting with this version, Ansible automatically generates and manages the Trae
 | `homestack_ha_evcc_vw_user`               | `mail@example.com`  | email for accessing the We Connect services |
 | `homestack_ha_evcc_vw_password`           | `supersafe`         | password for accessing the We Connect services |
 | `homestack_ha_evcc_vw_vin`                | `WVWZZZAAZJD000000` | VIN for accessing the We Connect services |
+
+### Variables for the git stack (Forgejo)
+
+| Variable                                  | default                   | Description |
+| ----------------------------------------- | ------------------------- | ----------- |
+| `homestack_git_active`                    | `true`                    | Switch rendering of git docker-compose file on or off |
+| `homestack_git_base_domain`               | `example.com`             | base domain name, will be prefixed with `git.` for the FQDN |
+| `homestack_git_ssh_port`                  | `2222`                    | External SSH port shown in git clone URLs (Traefik routes to internal container port 2222) |
+| `homestack_git_forgejo_image_version`     | `11-rootless`             | version of the Forgejo docker image |
+| `homestack_git_base_path`                 | _not set_                 | Base directory for Forgejo data (repositories, config, logs). Example: /opt/forgejo |
+| `homestack_git_root_url`                  | `https://git.{{ homestack_git_base_domain }}/` | Full URL for accessing Forgejo web interface |
+| `homestack_git_ssh_domain`                | `git.{{ homestack_git_base_domain }}` | Domain shown in SSH clone URLs |
+| `homestack_git_db_type`                   | `sqlite3`                 | Database type: `sqlite3`, `mysql`, or `postgres` |
+| `homestack_git_db_path`                   | `/var/lib/gitea/data/forgejo.db` | Path to SQLite database file (only used when db_type is sqlite3) |
+| `homestack_git_db_host`                   | _not set_                 | Database host:port (required for MySQL/PostgreSQL). Example: `127.0.0.1:3306` |
+| `homestack_git_db_name`                   | _not set_                 | Database name (required for MySQL/PostgreSQL) |
+| `homestack_git_db_user`                   | _not set_                 | Database user (required for MySQL/PostgreSQL) |
+| `homestack_git_db_password`               | _not set_                 | Database password (required for MySQL/PostgreSQL) |
+| `homestack_git_secret_key`                | _not set_                 | Encryption key for cookies and tokens. Generate with: `openssl rand -hex 32` |
+| `homestack_git_internal_token`            | _not set_                 | Authentication token for internal API calls. Generate with: `openssl rand -hex 105` |
+| `homestack_git_lfs_jwt_secret`            | _not set_                 | JWT secret for LFS (defaults to secret_key if not set) |
+| `homestack_git_oauth2_jwt_secret`         | _not set_                 | JWT secret for OAuth2 (defaults to secret_key if not set) |
+| `homestack_git_disable_registration`      | `true`                    | Disable public user registration |
+| `homestack_git_require_signin_view`       | `false`                   | Require authentication to view any page |
+| `homestack_git_webhook_allowed_hosts`     | `external`                | Restrict webhooks to external hosts (not internal networks). Use `*` to allow all (not recommended) |
+| `homestack_git_mailer_enabled`            | `false`                   | Enable email notifications |
+| `homestack_git_mailer_host`               | _not set_                 | SMTP server hostname (required if mailer is enabled) |
+| `homestack_git_mailer_port`               | `587`                     | SMTP port (587 for STARTTLS, 465 for SMTPS, 25 for plain) |
+| `homestack_git_mailer_from`               | _not set_                 | Email address used as sender (required if mailer is enabled) |
+| `homestack_git_mailer_user`               | _not set_                 | Username for SMTP authentication (optional) |
+| `homestack_git_mailer_password`           | _not set_                 | Password for SMTP authentication (optional) |
