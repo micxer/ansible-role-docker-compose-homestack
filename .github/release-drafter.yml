@@ -1,7 +1,27 @@
 name-template: 'v$RESOLVED_VERSION 📦'
 tag-template: 'v$RESOLVED_VERSION'
 tag-prefix: 'v'
+version-resolver:
+  major:
+    labels:
+      - 'breaking'
+      - 'breaking-change'
+  minor:
+    labels:
+      - 'feature'
+      - 'enhancement'
+  patch:
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+      - 'chore'
+  default: patch
 categories:
+  - title: '💥 Breaking Changes'
+    labels:
+      - 'breaking'
+      - 'breaking-change'
   - title: '🚀 Features'
     labels:
       - 'feature'
@@ -20,6 +40,13 @@ template: |
 
   $CHANGES
 autolabeler:
+  - label: 'breaking'
+    branch:
+      - '/breaking\/.+/'
+    title:
+      - '/^BREAKING:/i'
+      - '/\!:/i'
+      - '/breaking change/i'
   - label: 'chore'
     files:
       - '*.md'
