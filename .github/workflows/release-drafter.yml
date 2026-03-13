@@ -27,7 +27,7 @@ jobs:
     steps:
       # Updates draft release notes when PRs are opened/updated against main
       # Publishes the release on push to main (including merged PRs)
-      - uses: release-drafter/release-drafter@6a93d829887aa2e0748befe2e808c66c0ec6e4c7 # v6
+      - uses: release-drafter/release-drafter@3a7fb5c85b80b1dda66e1ccb94009adbbd32fce3 # v7
         with:
           commitish: main
           publish: ${{ github.event_name == 'push' }}
