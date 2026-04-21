@@ -16,7 +16,7 @@ jobs:
         uses: ansible/ansible-lint@5fac056c45595896c973fbde871f01f6cb14d74c # v26
 
       - name: Upload Sarif file
-        uses: github/codeql-action/upload-sarif@38697555549f1db7851b81482ff19f1fa5c4fedc # v4
+        uses: github/codeql-action/upload-sarif@95e58e9a2cdfd71adc6e0353d5c52f41a045d225 # v4
         with:
           sarif_file: ansible-lint.sarif
         if: always()
