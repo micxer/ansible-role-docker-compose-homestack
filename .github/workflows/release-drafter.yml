@@ -11,6 +11,9 @@ on:
   # pull_request_target event is required for autolabeler to support PRs from forks
   # pull_request_target:
   #   types: [opened, reopened, synchronize]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 9 1,15 * *'  # 1st and 15th of each month (~every 2 weeks)
 
 permissions:
   contents: read
@@ -25,12 +28,68 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      # Updates draft release notes when PRs are opened/updated against main
-      # Publishes the release on push to main (including merged PRs)
+      # On push to main, check whether the merged PR carries a significant label.
+      # Chore-only merges (e.g. Renovate dependency bumps) update the draft but
+      # do not trigger an immediate release.
+      - name: Check merged PR significance
+        id: pr-check
+        if: github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+            });
+            if (prs.data.length === 0) {
+              core.setOutput('publish', 'false');
+              return;
+            }
+            const labels = prs.data[0].labels.map(l => l.name);
+            const significant = ['feature', 'enhancement', 'fix', 'bugfix', 'bug', 'security', 'breaking', 'breaking-change'];
+            core.setOutput('publish', labels.some(l => significant.includes(l)) ? 'true' : 'false');
+
+      # On the scheduled run, skip publishing if nothing has merged since the last release.
+      # This avoids creating an empty or chore-only release when there has been no activity.
+      # workflow_dispatch bypasses this check intentionally — a manual trigger always publishes.
+      - name: Check for unreleased changes (schedule only)
+        id: schedule-check
+        if: github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const releases = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 10,
+            });
+            const latest = releases.data.find(r => !r.draft && !r.prerelease);
+            const since = latest ? latest.published_at : null;
+
+            const prs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed',
+              base: 'main',
+              sort: 'updated',
+              direction: 'desc',
+              per_page: 100,
+            });
+            const merged = prs.data.filter(pr =>
+              pr.merged_at && (!since || new Date(pr.merged_at) > new Date(since))
+            );
+            core.setOutput('has_changes', merged.length > 0 ? 'true' : 'false');
+
+      # Updates draft release notes when PRs are opened/updated against main.
+      # Publishes when:
+      #   - triggered manually (workflow_dispatch)
+      #   - the biweekly schedule fires AND there are unreleased merged PRs
+      #   - a significant (non-chore) PR was merged to main
       - uses: release-drafter/release-drafter@5de93583980a40bd78603b6dfdcda5b4df377b32 # v7
         with:
           commitish: main
-          publish: ${{ github.event_name == 'push' }}
+          publish: ${{ github.event_name == 'workflow_dispatch' || steps.pr-check.outputs.publish == 'true' || steps.schedule-check.outputs.has_changes == 'true' }}
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
