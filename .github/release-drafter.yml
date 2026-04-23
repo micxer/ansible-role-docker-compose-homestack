@@ -16,6 +16,7 @@ version-resolver:
       - 'bugfix'
       - 'bug'
       - 'chore'
+      - 'security'
   default: patch
 categories:
   - title: '💥 Breaking Changes'
@@ -26,6 +27,12 @@ categories:
     labels:
       - 'feature'
       - 'enhancement'
+    exclude-labels:
+      - 'breaking'
+      - 'breaking-change'
+  - title: '🔒 Security'
+    labels:
+      - 'security'
     exclude-labels:
       - 'breaking'
       - 'breaking-change'
