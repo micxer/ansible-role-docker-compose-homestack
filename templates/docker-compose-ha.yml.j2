@@ -45,7 +45,7 @@ services:
     depends_on:
       - mosquitto
     healthcheck:
-      test: ["CMD", "wget", "-O", "/dev/null", "http://localhost:7070/api/health"]
+      test: ["CMD", "wget", "-O", "/dev/null", "http://localhost:7070/"]
       interval: 10s
       timeout: 5s
       retries: 5
