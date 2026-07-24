@@ -35,7 +35,7 @@ homestack_nextcloud_base_domain: example.com
 # renovate: image=mariadb
 homestack_nextcloud_mariadb_version: 12.3.2
 # renovate: image=redis
-homestack_nextcloud_redis_version: 8.8.0
+homestack_nextcloud_redis_version: 8.8.1
 
 # homestack_monitoring
 homestack_monitoring_active: true
