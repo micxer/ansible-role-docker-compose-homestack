@@ -27,6 +27,7 @@ services:
       traefik.http.routers.vwsfriend.rule: "Host(`vwsfriend.{{ homestack_vwsfriend_base_domain }}`)"
       traefik.http.routers.vwsfriend.entrypoints: websecure
       traefik.http.routers.vwsfriend.tls.options: modern@file
+      traefik.http.routers.vwsfriend.middlewares: default@file
     networks:
       - traefik
       - vwsfriend

@@ -10,8 +10,18 @@ http:
     default:
       chain:
         middlewares:
+          - error-pages
           - default-security-headers
           - gzip
+
+    # Show custom error pages for backend/gateway errors (served by the error-pages container)
+    # Use with traefik.http.routers.myRouter.middlewares: "error-pages@file"
+    error-pages:
+      errors:
+        status:
+          - "400-599"
+        service: error-pages-service@docker
+        query: "/{status}.html"
 
     # Add automatically some security headers
     # Use with traefik.http.routers.myRouter.middlewares: "default-security-headers@file"

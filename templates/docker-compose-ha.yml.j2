@@ -56,6 +56,7 @@ services:
       traefik.http.routers.evcc.rule: "Host(`evcc.{{ homestack_monitoring_base_domain }}`)"
       traefik.http.routers.evcc.entrypoints: websecure
       traefik.http.routers.evcc.tls.options: modern@file
+      traefik.http.routers.evcc.middlewares: default@file
       traefik.docker.network: traefik-net
       traefik.http.services.evcc.loadbalancer.server.port: "7070"
     networks:

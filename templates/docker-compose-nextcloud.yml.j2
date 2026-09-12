@@ -78,6 +78,7 @@ services:
       traefik.http.routers.nextcloud_notify_push.entrypoints: websecure
       traefik.http.routers.nextcloud_notify_push.tls.options: modern@file
       traefik.http.routers.nextcloud_notify_push.priority: 11
+      traefik.http.routers.nextcloud_notify_push.middlewares: default@file
       # necessary for the notify_push app to work:
       traefik.http.routers.nextcloud_notify_push.rule: "Host(`nextcloud.{{ homestack_nextcloud_base_domain }}`) && PathPrefix(`/push`)"
     networks:
