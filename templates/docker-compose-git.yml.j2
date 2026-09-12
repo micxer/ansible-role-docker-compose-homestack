@@ -27,6 +27,7 @@ services:
       traefik.http.services.forgejo.loadbalancer.server.port: 3000
       traefik.http.routers.forgejo.entrypoints: websecure
       traefik.http.routers.forgejo.tls.options: modern@file
+      traefik.http.routers.forgejo.middlewares: default@file
 
       # TCP for SSH git operations
       traefik.tcp.routers.forgejo-ssh.rule: "HostSNI(`*`)"
