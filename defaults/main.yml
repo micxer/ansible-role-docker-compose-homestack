@@ -33,7 +33,7 @@ homestack_nextcloud_image_version: 33.0.9-apache
 homestack_nextcloud_base_domain: example.com
 # homestack_nextcloud_mysql_path: ""  # must be set
 # renovate: image=mariadb
-homestack_nextcloud_mariadb_version: 12.3.3
+homestack_nextcloud_mariadb_version: 13.0.2
 # renovate: image=redis
 homestack_nextcloud_redis_version: 8.10.1
 
