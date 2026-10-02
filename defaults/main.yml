@@ -109,7 +109,6 @@ homestack_git_ssh_domain: "git.{{ homestack_git_base_domain }}"
 
 # Database (default to SQLite for simplicity)
 homestack_git_db_type: sqlite3
-homestack_git_db_path: /var/lib/gitea/data/forgejo.db
 # For MySQL/PostgreSQL, set homestack_git_db_type to 'mysql' or 'postgres' and configure:
 # homestack_git_db_host: "127.0.0.1:3306"  # Database host:port
 # homestack_git_db_name: "forgejo"  # Database name
@@ -129,8 +128,7 @@ homestack_git_require_signin_view: false
 # Webhook settings
 homestack_git_webhook_allowed_hosts: external  # Restrict webhooks to external hosts (not internal networks). Use '*' to allow all (not recommended)
 
-# Mailer (optional)
-homestack_git_mailer_enabled: false
+# Mailer (optional), enable by setting homestack_git_mailer_host, homestack_git_mailer_port, homestack_git_mailer_user, and homestack_git_mailer_password
 # homestack_git_mailer_host: ""
 homestack_git_mailer_port: 587  # SMTP port (587 for STARTTLS, 465 for SMTPS, 25 for plain)
 # homestack_git_mailer_from: ""
