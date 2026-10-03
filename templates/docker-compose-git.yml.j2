@@ -14,7 +14,6 @@ services:
           ! echo "$$HEALTH_RESPONSE" | /bin/grep "\"status\": \"fail\"" &>/dev/null &&
           ! echo "$$HEALTH_RESPONSE" | /bin/grep "\"status\": \"warn\"" &>/dev/null; }
       start_period: 1m
-      start_interval: 3s
       interval: 15s
       timeout: 5s
       retries: 3
