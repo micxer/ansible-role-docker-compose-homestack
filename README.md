@@ -162,3 +162,5 @@ Starting with this version, Ansible automatically generates and manages the Trae
 | `homestack_git_mailer_from`               | _not set_                 | Email address used as sender (required if mailer is enabled) |
 | `homestack_git_mailer_user`               | _not set_                 | Username for SMTP authentication (optional) |
 | `homestack_git_mailer_password`           | _not set_                 | Password for SMTP authentication (optional) |
+
+When backups are enabled, Forgejo data (including the default SQLite database) is snapshotted from the `forgejo` dataset under the first configured ZFS pool.
