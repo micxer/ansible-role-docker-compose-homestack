@@ -128,7 +128,9 @@ SKIP_TLS_VERIFY = false
 
 
 [mailer]
-ENABLED = {{ (homestack_git_smtp_addr and homestack_git_smtp_port and homestack_git_smtp_user and homestack_git_smtp_passwd) | bool | lower }}
+{% set mailer_enabled = (homestack_git_mailer_host and homestack_git_mailer_port and homestack_git_mailer_user and homestack_git_mailer_password) | bool %}
+ENABLED = {{ mailer_enabled | lower }}
+{% if mailer_enabled %}
 PROTOCOL = smtp
 SMTP_ADDR = {{ homestack_git_mailer_host }}
 SMTP_PORT = {{ homestack_git_mailer_port }}
@@ -195,7 +197,7 @@ TOKEN = {{ homestack_git_metrics_token }}
 
 [oauth2]
 ENABLED = true
-JWT_SECRET = F4PHtaa8TmgPc-DHhXoo7QQrerHHY8Pm-QocVO4F8Cs
+JWT_SECRET = {{ homestack_git_oauth2_jwt_secret }}
 
 [i18n]
 
