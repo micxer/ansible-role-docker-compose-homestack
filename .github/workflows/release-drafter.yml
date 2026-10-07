@@ -86,7 +86,7 @@ jobs:
       #   - triggered manually (workflow_dispatch)
       #   - the biweekly schedule fires AND there are unreleased merged PRs
       #   - a significant (non-chore) PR was merged to main
-      - uses: release-drafter/release-drafter@72967cdc98ddd3160f1fc3dff619de365e137dd0 # v7
+      - uses: release-drafter/release-drafter@978bb0b30c5ee8cdd332ced253758157150d43f0 # v7
         with:
           commitish: main
           publish: ${{ github.event_name == 'workflow_dispatch' || steps.pr-check.outputs.publish == 'true' || steps.schedule-check.outputs.has_changes == 'true' }}
