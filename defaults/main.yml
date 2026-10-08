@@ -2,6 +2,10 @@
 # general settings
 homestack_output_path: "~"
 
+# enable backup scripts
+homestack_backup: true
+homestack_backup_script_path: /usr/local/bin
+
 # traefik
 # renovate: image=traefik
 homestack_traefik_version: v3.7.14
@@ -14,7 +18,7 @@ homestack_traefik_base_domain: example.com
 # homestack_traefik_base_path:  # must be set
 
 # Nextcloud
-homestack_nextcloud_active: true
+homestack_nextcloud_active: false
 homestack_nextcloud_uid: "1000"
 homestack_nextcloud_gid: "1000"
 homestack_nextcloud_user: "www-data"
@@ -38,7 +42,7 @@ homestack_nextcloud_mariadb_version: 12.3.3
 homestack_nextcloud_redis_version: 8.10.2
 
 # homestack_monitoring
-homestack_monitoring_active: true
+homestack_monitoring_active: false
 homestack_monitoring_base_domain: example.com
 # renovate: image=prom/prometheus
 homestack_monitoring_prometheus_image_version: v3.15.0
@@ -51,7 +55,7 @@ homestack_monitoring_grafana_image_version: 13.0.2
 # homestack_monitoring_grafana_base_path: ""  # must be set
 
 # homestack_ha
-homestack_ha_active: true
+homestack_ha_active: false
 homestack_ha_base_domain: example.com
 
 # renovate: image=eclipse-mosquitto
@@ -72,7 +76,7 @@ homestack_ha_evcc_grid_costs: 0.30 # €/kWh
 homestack_ha_evcc_feedin_revenue: 0.082 # €/kWh
 
 # vwsfriend
-homestack_vwsfriend_active: true
+homestack_vwsfriend_active: false
 homestack_vwsfriend_base_domain: example.com
 
 # renovate: image=tillsteinbach/vwsfriend
@@ -91,11 +95,8 @@ homestack_vwsfriend_db_name: vwsfriend
 homestack_vwsfriend_additional_parameters: ""
 homestack_vwsfriend_grafana_version: 0.24.7
 
-homestack_backup: true
-homestack_backup_script_path: /usr/local/bin
-
 # git/forgejo
-homestack_git_active: true
+homestack_git_active: false
 homestack_git_base_domain: example.com
 homestack_git_ssh_port: 2222  # External SSH port shown in git clone URLs (Traefik routes to internal container port 2222)
 
