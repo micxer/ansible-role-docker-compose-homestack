@@ -53,7 +53,7 @@ services:
   error-pages:
     container_name: error-pages
     environment:
-      TEMPLATE_NAME: "{{ homestack_error_pages_theme }}"
+      HTML_TEMPLATE_NAME: "{{ homestack_error_pages_theme }}"
     image: ghcr.io/tarampampam/error-pages:{{ homestack_error_pages_version }}
     labels:
       traefik.enable: true
