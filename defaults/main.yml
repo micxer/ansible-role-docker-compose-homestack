@@ -10,7 +10,7 @@ homestack_backup_script_path: /usr/local/bin
 # renovate: image=traefik
 homestack_traefik_version: v3.7.14
 # renovate: image=ghcr.io/tarampampam/error-pages
-homestack_error_pages_version: 3.8
+homestack_error_pages_version: 4.2
 homestack_error_pages_theme: app-down
 # homestack_traefik_hostingde_api_key:  # must be set
 homestack_traefik_hostingde_domain: example.com
