@@ -62,6 +62,10 @@
   ansible.builtin.include_tasks: git.yml
   when: homestack_git_active
 
+- name: Include Fleet stack tasks
+  ansible.builtin.include_tasks: fleet.yml
+  when: homestack_fleet_active
+
 - name: Include backup tasks
   ansible.builtin.include_tasks: backup.yml
   when: homestack_backup

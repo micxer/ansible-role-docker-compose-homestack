@@ -141,3 +141,43 @@ homestack_git_mailer_password: ""
 homestack_git_repo_indexer_enabled: false
 
 homestack_git_metrics_token: ""
+
+# Fleet
+homestack_fleet_active: false
+homestack_fleet_base_domain: example.com
+# homestack_fleet_base_path: ""  # REQUIRED: Fleet data, logs, Redis, and vulnerability databases
+# homestack_fleet_mysql_path: ""  # REQUIRED: Parent path for Fleet's MySQL data directory
+homestack_fleet_server_address: 0.0.0.0
+homestack_fleet_server_port: 1337
+
+# renovate: image=mysql
+homestack_fleet_mysql_image_version: "8"
+# homestack_fleet_mysql_root_password: ""  # REQUIRED
+homestack_fleet_mysql_database: fleet
+homestack_fleet_mysql_user: fleet
+# homestack_fleet_mysql_password: ""  # REQUIRED
+
+# renovate: image=redis
+homestack_fleet_redis_image_version: "6"
+
+# renovate: image=fleetdm/fleet
+homestack_fleet_image_version: latest
+# homestack_fleet_server_private_key: ""  # REQUIRED: Generate with `openssl rand -base64 32`
+homestack_fleet_license_key: ""
+homestack_fleet_session_duration: 24h
+homestack_fleet_logging_json: "true"
+homestack_fleet_osquery_status_log_plugin: filesystem
+homestack_fleet_filesystem_status_log_file: /logs/osqueryd.status.log
+homestack_fleet_filesystem_result_log_file: /logs/osqueryd.results.log
+homestack_fleet_osquery_label_update_interval: 1h
+homestack_fleet_vulnerabilities_current_instance_checks: "yes"
+homestack_fleet_vulnerabilities_databases_path: /vulndb
+homestack_fleet_vulnerabilities_periodicity: 1h
+
+# Optional S3-compatible storage for software installers
+homestack_fleet_s3_software_installers_bucket: ""
+homestack_fleet_s3_software_installers_access_key_id: ""
+homestack_fleet_s3_software_installers_secret_access_key: ""
+homestack_fleet_s3_software_installers_force_s3_path_style: ""
+homestack_fleet_s3_software_installers_endpoint_url: ""
+homestack_fleet_s3_software_installers_region: ""
