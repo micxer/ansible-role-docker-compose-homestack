@@ -1,0 +1,52 @@
+---
+- name: fleet | Validate required variables
+  ansible.builtin.assert:
+    that:
+      - homestack_fleet_base_path is defined
+      - homestack_fleet_base_path | default('') | length > 0
+      - homestack_fleet_mysql_path is defined
+      - homestack_fleet_mysql_path | default('') | length > 0
+      - homestack_fleet_mysql_root_password is defined
+      - homestack_fleet_mysql_root_password | default('') | length > 0
+      - homestack_fleet_mysql_password is defined
+      - homestack_fleet_mysql_password | default('') | length > 0
+      - homestack_fleet_server_private_key is defined
+      - homestack_fleet_server_private_key | default('') | length > 0
+    fail_msg: >-
+      Required Fleet variables not set. Configure homestack_fleet_base_path,
+      homestack_fleet_mysql_path, homestack_fleet_mysql_root_password,
+      homestack_fleet_mysql_password, and homestack_fleet_server_private_key
+      (generate the latter with `openssl rand -base64 32`).
+
+- name: fleet | Ensure Fleet data directories exist
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "0750"
+  loop:
+    - path: "{{ homestack_fleet_base_path }}/data"
+      owner: "100"
+      group: "101"
+    - path: "{{ homestack_fleet_base_path }}/logs"
+      owner: "100"
+      group: "101"
+    - path: "{{ homestack_fleet_base_path }}/vulndb"
+      owner: "100"
+      group: "101"
+    - path: "{{ homestack_fleet_base_path }}/redis"
+      owner: "999"
+      group: "999"
+    - path: "{{ homestack_fleet_mysql_path }}/fleet-db"
+      owner: "999"
+      group: "999"
+
+- name: fleet | Write docker-compose file
+  ansible.builtin.template:
+    src: "docker-compose-fleet.yml.j2"
+    dest: "{{ homestack_output_path }}/docker-compose-fleet.yml"
+    owner: "{{ homestack_uid }}"
+    group: "{{ homestack_gid }}"
+    mode: "0600"
+    backup: true

@@ -164,3 +164,58 @@ Starting with this version, Ansible automatically generates and manages the Trae
 | `homestack_git_mailer_password`           | _not set_                 | Password for SMTP authentication (optional) |
 
 When backups are enabled, Forgejo data (including the default SQLite database) is snapshotted from the `forgejo` dataset under the first configured ZFS pool.
+
+### Fleet
+
+Fleet is deployed behind Traefik at `https://fleet.<homestack_fleet_base_domain>`. Its own TLS is disabled so Traefik can terminate HTTPS; DNS for the Fleet hostname must point to Traefik. Fleet's MySQL and Redis services are isolated on `fleet-net`. Fleet's data, logs, vulnerability databases, and Redis data are stored in directories under `homestack_fleet_base_path`; MySQL data uses the separate `homestack_fleet_mysql_path`, matching the Nextcloud database path convention.
+
+Enable the stack and configure its required secrets and data path:
+
+```yaml
+homestack_fleet_active: true
+homestack_fleet_base_path: /opt/fleet
+homestack_fleet_mysql_path: /opt/databases
+homestack_fleet_base_domain: example.com
+homestack_fleet_mysql_root_password: "<strong root password>"
+homestack_fleet_mysql_password: "<strong Fleet database password>"
+homestack_fleet_server_private_key: "<output of openssl rand -base64 32>"
+```
+
+Start the stack with:
+
+```sh
+docker compose -f docker-compose-fleet.yml up -d
+```
+
+| Variable | Default | Description |
+| -------- | ------- | ----------- |
+| `homestack_fleet_active` | `false` | Enable rendering of the Fleet Compose file |
+| `homestack_fleet_base_path` | _required_ | Host directory for Fleet data, logs, Redis, and vulnerability databases |
+| `homestack_fleet_mysql_path` | _required_ | Parent host directory for Fleet's MySQL data (`fleet-db` subdirectory) |
+| `homestack_fleet_base_domain` | `example.com` | Base domain; Fleet is served at `fleet.<domain>` |
+| `homestack_fleet_mysql_root_password` | _required_ | MySQL root password |
+| `homestack_fleet_mysql_password` | _required_ | Password for Fleet's MySQL user |
+| `homestack_fleet_server_private_key` | _required_ | Fleet server key; generate with `openssl rand -base64 32` |
+| `homestack_fleet_mysql_image_version` | `8` | MySQL image version |
+| `homestack_fleet_redis_image_version` | `6` | Redis image version |
+| `homestack_fleet_image_version` | `latest` | Fleet image version |
+| `homestack_fleet_server_address` | `0.0.0.0` | Address Fleet listens on inside the container |
+| `homestack_fleet_server_port` | `1337` | Fleet HTTP port inside the container |
+| `homestack_fleet_license_key` | `""` | Optional Fleet Premium license key |
+| `homestack_fleet_session_duration` | `24h` | Fleet session lifetime |
+| `homestack_fleet_logging_json` | `"true"` | Enable JSON-formatted logs |
+| `homestack_fleet_osquery_status_log_plugin` | `filesystem` | Osquery status log plugin |
+| `homestack_fleet_filesystem_status_log_file` | `/logs/osqueryd.status.log` | Osquery status log file |
+| `homestack_fleet_filesystem_result_log_file` | `/logs/osqueryd.results.log` | Osquery result log file |
+| `homestack_fleet_osquery_label_update_interval` | `1h` | Osquery label update interval |
+| `homestack_fleet_vulnerabilities_current_instance_checks` | `yes` | Check the current Fleet instance for vulnerabilities |
+| `homestack_fleet_vulnerabilities_databases_path` | `/vulndb` | Container path for vulnerability database files |
+| `homestack_fleet_vulnerabilities_periodicity` | `1h` | Vulnerability database update interval |
+| `homestack_fleet_s3_software_installers_bucket` | `""` | Optional S3 bucket for software installers |
+| `homestack_fleet_s3_software_installers_access_key_id` | `""` | Optional S3 access key |
+| `homestack_fleet_s3_software_installers_secret_access_key` | `""` | Optional S3 secret key |
+| `homestack_fleet_s3_software_installers_force_s3_path_style` | `""` | Force path-style S3 requests when configured |
+| `homestack_fleet_s3_software_installers_endpoint_url` | `""` | Optional custom S3-compatible endpoint |
+| `homestack_fleet_s3_software_installers_region` | `""` | Optional S3 region |
+
+The role prepares persistent directories for the Fleet, MySQL, and Redis containers with their respective container user ownership. Fleet's web/API endpoint is not published directly on the host; access it through Traefik.

@@ -1,0 +1,123 @@
+{{ ansible_managed | comment }}
+---
+services:
+  mysql:
+    container_name: fleet-mysql
+    image: mysql:{{ homestack_fleet_mysql_image_version }}
+    environment:
+      MYSQL_ROOT_PASSWORD: {{ homestack_fleet_mysql_root_password | string | replace('$', '$$') | to_json }}
+      MYSQL_DATABASE: {{ homestack_fleet_mysql_database | string | replace('$', '$$') | to_json }}
+      MYSQL_USER: {{ homestack_fleet_mysql_user | string | replace('$', '$$') | to_json }}
+      MYSQL_PASSWORD: {{ homestack_fleet_mysql_password | string | replace('$', '$$') | to_json }}
+    volumes:
+      - "{{ homestack_fleet_mysql_path }}/fleet-db:/var/lib/mysql"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    networks:
+      - fleet
+
+  redis:
+    command: ["redis-server", "--appendonly", "yes"]
+    container_name: fleet-redis
+    healthcheck:
+      test: ["CMD", "redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    image: redis:{{ homestack_fleet_redis_image_version }}
+    networks:
+      - fleet
+    volumes:
+      - "{{ homestack_fleet_base_path }}/redis:/data"
+    restart: unless-stopped
+
+  fleet-init:
+    container_name: fleet-init
+    image: alpine:3.23
+    volumes:
+      - "{{ homestack_fleet_base_path }}/data:/data"
+      - "{{ homestack_fleet_base_path }}/logs:/logs"
+      - "{{ homestack_fleet_base_path }}/vulndb:/vulndb"
+    command: ["sh", "-c", "chown -R 100:101 /data /logs /vulndb"]
+    restart: "no"
+
+  fleet:
+    container_name: fleet
+    image: fleetdm/fleet:{{ homestack_fleet_image_version }}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      fleet-init:
+        condition: service_completed_successfully
+    command: ["sh", "-c", "/usr/bin/fleet prepare db --no-prompt && /usr/bin/fleet serve"]
+    environment:
+      FLEET_REDIS_ADDRESS: "redis:6379"
+      FLEET_MYSQL_ADDRESS: "mysql:3306"
+      FLEET_MYSQL_DATABASE: {{ homestack_fleet_mysql_database | string | replace('$', '$$') | to_json }}
+      FLEET_MYSQL_USERNAME: {{ homestack_fleet_mysql_user | string | replace('$', '$$') | to_json }}
+      FLEET_MYSQL_PASSWORD: {{ homestack_fleet_mysql_password | string | replace('$', '$$') | to_json }}
+      FLEET_SERVER_ADDRESS: {{ (homestack_fleet_server_address ~ ':' ~ homestack_fleet_server_port) | string | replace('$', '$$') | to_json }}
+      FLEET_SERVER_TLS: "false"
+      FLEET_SERVER_PRIVATE_KEY: {{ homestack_fleet_server_private_key | string | replace('$', '$$') | to_json }}
+      FLEET_LICENSE_KEY: {{ homestack_fleet_license_key | string | replace('$', '$$') | to_json }}
+      FLEET_SESSION_DURATION: {{ homestack_fleet_session_duration | string | replace('$', '$$') | to_json }}
+      FLEET_LOGGING_JSON: {{ homestack_fleet_logging_json | string | replace('$', '$$') | to_json }}
+      FLEET_OSQUERY_STATUS_LOG_PLUGIN: {{ homestack_fleet_osquery_status_log_plugin | string | replace('$', '$$') | to_json }}
+      FLEET_FILESYSTEM_STATUS_LOG_FILE: {{ homestack_fleet_filesystem_status_log_file | string | replace('$', '$$') | to_json }}
+      FLEET_FILESYSTEM_RESULT_LOG_FILE: {{ homestack_fleet_filesystem_result_log_file | string | replace('$', '$$') | to_json }}
+      FLEET_OSQUERY_LABEL_UPDATE_INTERVAL: {{ homestack_fleet_osquery_label_update_interval | string | replace('$', '$$') | to_json }}
+      FLEET_VULNERABILITIES_CURRENT_INSTANCE_CHECKS: {{ homestack_fleet_vulnerabilities_current_instance_checks | string | replace('$', '$$') | to_json }}
+      FLEET_VULNERABILITIES_DATABASES_PATH: {{ homestack_fleet_vulnerabilities_databases_path | string | replace('$', '$$') | to_json }}
+      FLEET_VULNERABILITIES_PERIODICITY: {{ homestack_fleet_vulnerabilities_periodicity | string | replace('$', '$$') | to_json }}
+      FLEET_S3_SOFTWARE_INSTALLERS_BUCKET: {{ homestack_fleet_s3_software_installers_bucket | string | replace('$', '$$') | to_json }}
+      FLEET_S3_SOFTWARE_INSTALLERS_ACCESS_KEY_ID: {{ homestack_fleet_s3_software_installers_access_key_id | string | replace('$', '$$') | to_json }}
+      FLEET_S3_SOFTWARE_INSTALLERS_SECRET_ACCESS_KEY: {{ homestack_fleet_s3_software_installers_secret_access_key | string | replace('$', '$$') | to_json }}
+      FLEET_S3_SOFTWARE_INSTALLERS_FORCE_S3_PATH_STYLE: {{ homestack_fleet_s3_software_installers_force_s3_path_style | string | replace('$', '$$') | to_json }}
+      FLEET_S3_SOFTWARE_INSTALLERS_ENDPOINT_URL: {{ homestack_fleet_s3_software_installers_endpoint_url | string | replace('$', '$$') | to_json }}
+      FLEET_S3_SOFTWARE_INSTALLERS_REGION: {{ homestack_fleet_s3_software_installers_region | string | replace('$', '$$') | to_json }}
+    volumes:
+      - "{{ homestack_fleet_base_path }}/data:/fleet"
+      - "{{ homestack_fleet_base_path }}/logs:/logs"
+      - "{{ homestack_fleet_base_path }}/vulndb:{{ homestack_fleet_vulnerabilities_databases_path }}"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- http://127.0.0.1:{{ homestack_fleet_server_port }}/healthz",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik-net
+      traefik.http.routers.fleet.rule: "Host(`fleet.{{ homestack_fleet_base_domain }}`)"
+      traefik.http.routers.fleet.entrypoints: websecure
+      traefik.http.routers.fleet.tls.options: modern@file
+      traefik.http.routers.fleet.middlewares: default@file
+      traefik.http.services.fleet.loadbalancer.server.port: "{{ homestack_fleet_server_port }}"
+    restart: unless-stopped
+    networks:
+      - traefik
+      - fleet
+
+networks:
+  traefik:
+    name: traefik-net
+    external: true
+  fleet:
+    name: fleet-net
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.20.6.0/24
