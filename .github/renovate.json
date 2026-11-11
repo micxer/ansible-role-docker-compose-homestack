@@ -4,7 +4,9 @@
     "dependencies",
     "renovate"
   ],
-  "dependencyDashboard": true,
+  "dependencyDashboard": {
+    "enabled": true
+  },
   "extends": [
     "config:recommended",
     "config:best-practices"
